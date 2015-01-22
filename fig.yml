@@ -7,6 +7,5 @@ web:
   command: revel run gogo dev
   links:
     - db
-
 db:
-  image: mongo:2.6
+  image: mongo:latest

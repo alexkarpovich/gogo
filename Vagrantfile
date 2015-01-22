@@ -61,9 +61,7 @@ SH
       sudo npm install grunt-cli -g
 SH
 
-    vdocker.vm.network "forwarded_port", guest: 8000, host: 8000
-    vdocker.vm.network "forwarded_port", guest: 9000, host: 9000
-    vdocker.vm.network "forwarded_port", guest: 9001, host: 9001
+    vdocker.vm.network "forwarded_port", guest: 9000, host: 8000
     vdocker.vm.network :private_network, ip: "192.168.33.10"
 
   end
