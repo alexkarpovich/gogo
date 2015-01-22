@@ -1,0 +1,12 @@
+web:
+  build: .
+  volumes:
+    - .:/goprojects/src/gogo
+  ports:
+    - "9000:9000"
+  command: revel run gogo dev
+  links:
+    - db
+
+db:
+  image: mongo:2.6
