@@ -1,3 +1,7 @@
 .idea
 .vagrant/
 node_modules
+public/styles/css*
+public/js/dist*
+public/fonts/*
+public/bower_components*

@@ -22,6 +22,8 @@ RUN mkdir -p /goprojects/src/gogo
 RUN go get github.com/revel/revel
 RUN go get github.com/revel/cmd/revel
 RUN go get gopkg.in/mgo.v2
+RUN go get gopkg.in/mgo.v2/bson
+RUN go get gopkg.in/pipe.v2
 
 WORKDIR /goprojects/src/gogo
 

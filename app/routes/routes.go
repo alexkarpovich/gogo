@@ -15,6 +15,13 @@ func (_ tApp) Index(
 	return revel.MainRouter.Reverse("App.Index", args).Url
 }
 
+func (_ tApp) Printer(
+		) string {
+	args := make(map[string]string)
+	
+	return revel.MainRouter.Reverse("App.Printer", args).Url
+}
+
 
 type tStatic struct {}
 var Static tStatic
