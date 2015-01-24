@@ -1,0 +1,41 @@
+{{set . "title" "Create new article"}}
+{{template "header.html" .}}
+
+<div class="col-sm-6 col-sm-offset-3">
+	
+	<div class="panel panel-default">		
+		<div class="panel-heading">
+			<h3 class="centred">Create new Article</h3>
+		</div>
+		<form name="create_article" method="post" action="/Article/Create">
+		<div class="panel-body">	
+			{{with $field := field "article.Title" .}}		
+			<div class="form-group">
+				<label for="{{$field.Id}}">Article title:</label>
+				<input type="text" id="{{$field.Id}}" name="{{$field.Name}}" value="{{$field.Flash}}" class="{{$field.ErrorClass}} form-control" placeholder="Article title">
+				<span class="error">{{$field.Error}}</span>
+			</div>
+			{{end}}
+			{{with $field := field "article.Author" .}}		
+			<div class="form-group">
+				<label for="{{$field.Id}}">Article author:</label>
+				<input type="text" id="{{$field.Id}}" name="{{$field.Name}}" value="{{$field.Flash}}" class="{{$field.ErrorClass}} form-control" placeholder="Article author">
+				<span class="error">{{$field.Error}}</span>
+			</div>
+			{{end}}
+			{{with $field := field "article.Content" .}}		
+			<div class="form-group">
+				<label for="{{$field.Id}}">Article content:</label>
+				<textarea id="{{$field.Id}}" name="{{$field.Name}}" class="{{$field.ErrorClass}} form-control" placeholder="Article content">{{$field.Flash}}</textarea>
+				<span class="error">{{$field.Error}}</span>
+			</div>
+			{{end}}
+		</div>
+		<div class="panel-footer">
+			<input type="submit" class="btn btn-primary btn-sm btn-block" value="Create">			
+		</div>
+		</form>
+	</div>
+</div>
+
+{{template "footer.html" .}}

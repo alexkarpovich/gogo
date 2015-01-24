@@ -15,11 +15,43 @@ func (_ tApp) Index(
 	return revel.MainRouter.Reverse("App.Index", args).Url
 }
 
-func (_ tApp) Printer(
+
+type tArticle struct {}
+var Article tArticle
+
+
+func (_ tArticle) List(
 		) string {
 	args := make(map[string]string)
 	
-	return revel.MainRouter.Reverse("App.Printer", args).Url
+	return revel.MainRouter.Reverse("Article.List", args).Url
+}
+
+func (_ tArticle) Create(
+		article interface{},
+		) string {
+	args := make(map[string]string)
+	
+	revel.Unbind(args, "article", article)
+	return revel.MainRouter.Reverse("Article.Create", args).Url
+}
+
+func (_ tArticle) Update(
+		id string,
+		) string {
+	args := make(map[string]string)
+	
+	revel.Unbind(args, "id", id)
+	return revel.MainRouter.Reverse("Article.Update", args).Url
+}
+
+func (_ tArticle) Delete(
+		id string,
+		) string {
+	args := make(map[string]string)
+	
+	revel.Unbind(args, "id", id)
+	return revel.MainRouter.Reverse("Article.Delete", args).Url
 }
 
 

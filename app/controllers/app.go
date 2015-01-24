@@ -12,6 +12,3 @@ func (c App) Index() revel.Result {
 	return c.Render()
 }
 
-func (c App) Printer() revel.Result {
-  return c.Render();
-}

@@ -10,6 +10,7 @@ import (
 	controllers0 "github.com/revel/revel/modules/testrunner/app/controllers"
 	_ "gogo/app"
 	controllers "gogo/app/controllers"
+	models "gogo/app/models"
 	tests "gogo/tests"
 )
 
@@ -39,13 +40,46 @@ func main() {
 					},
 				},
 			},
+			
+		})
+	
+	revel.RegisterController((*controllers.Article)(nil),
+		[]*revel.MethodType{
 			&revel.MethodType{
-				Name: "Printer",
+				Name: "List",
 				Args: []*revel.MethodArg{ 
 				},
 				RenderArgNames: map[int][]string{ 
-					16: []string{ 
+					38: []string{ 
 					},
+				},
+			},
+			&revel.MethodType{
+				Name: "Create",
+				Args: []*revel.MethodArg{ 
+					&revel.MethodArg{Name: "article", Type: reflect.TypeOf((**models.Article)(nil)) },
+				},
+				RenderArgNames: map[int][]string{ 
+					76: []string{ 
+					},
+				},
+			},
+			&revel.MethodType{
+				Name: "Update",
+				Args: []*revel.MethodArg{ 
+					&revel.MethodArg{Name: "id", Type: reflect.TypeOf((*string)(nil)) },
+				},
+				RenderArgNames: map[int][]string{ 
+					128: []string{ 
+					},
+				},
+			},
+			&revel.MethodType{
+				Name: "Delete",
+				Args: []*revel.MethodArg{ 
+					&revel.MethodArg{Name: "id", Type: reflect.TypeOf((*string)(nil)) },
+				},
+				RenderArgNames: map[int][]string{ 
 				},
 			},
 			
@@ -109,6 +143,11 @@ func main() {
 		})
 	
 	revel.DefaultValidationKeys = map[string]map[int]string{ 
+		"gogo/app/models.Article.Validate": { 
+			19: "article.Title",
+			20: "article.Content",
+			21: "article.Author",
+		},
 	}
 	revel.TestSuites = []interface{}{ 
 		(*tests.AppTest)(nil),
