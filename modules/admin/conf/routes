@@ -1,0 +1,2 @@
+*	/:controller/:action		:controller.:action
+*	/:controller/:action/:id	:controller.:action

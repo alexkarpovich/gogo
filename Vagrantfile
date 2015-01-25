@@ -62,6 +62,7 @@ SH
 SH
 
     vdocker.vm.network "forwarded_port", guest: 9000, host: 8000
+    vdocker.vm.network "forwarded_port", guest: 27017, host: 27018
     vdocker.vm.network :private_network, ip: "192.168.33.10"
 
   end

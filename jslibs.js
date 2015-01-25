@@ -14,7 +14,8 @@ module.exports = function (basePath, min) {
     }
 
     var scripts = [        
-        basePath + '/jquery/dist/jquery' + target + '.js',        
+        basePath + '/jquery/dist/jquery' + target + '.js',  
+        basePath + '/bootstrap/dist/js/bootstrap' + target + '.js',      
         basePath + '/underscore/underscore.js',
         basePath + '/lodash/dist/lodash' + target + '.js',
         basePath + '/backbone/backbone.js',
