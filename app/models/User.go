@@ -2,6 +2,7 @@ package models
 
 import (
 	"github.com/revel/revel"
+	"time"
 )
 
 type User struct {
@@ -11,13 +12,12 @@ type User struct {
 	LastName string `bson:"lastName"`
 	Password string `bson:"password"`
 	ConfirmPassword string `bson:"confirmPassword"`
+	Joined time.Time `bson:"joined"`
+	Updated time.Time `bson:"updated"`
 }
 
 func (this User) Validate(v *revel.Validation) {
 	v.Required(this.Email)
 	v.Required(this.FirstName)
 	v.Required(this.LastName)
-	v.Required(this.Password)
-	v.Required(this.ConfirmPassword)
-	v.Required(this.Password==this.ConfirmPassword).Message("Not matching passwords")
 }

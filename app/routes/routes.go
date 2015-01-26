@@ -16,6 +16,36 @@ func (_ tApp) Index(
 }
 
 
+type tTestRunner struct {}
+var TestRunner tTestRunner
+
+
+func (_ tTestRunner) Index(
+		) string {
+	args := make(map[string]string)
+	
+	return revel.MainRouter.Reverse("TestRunner.Index", args).Url
+}
+
+func (_ tTestRunner) Run(
+		suite string,
+		test string,
+		) string {
+	args := make(map[string]string)
+	
+	revel.Unbind(args, "suite", suite)
+	revel.Unbind(args, "test", test)
+	return revel.MainRouter.Reverse("TestRunner.Run", args).Url
+}
+
+func (_ tTestRunner) List(
+		) string {
+	args := make(map[string]string)
+	
+	return revel.MainRouter.Reverse("TestRunner.List", args).Url
+}
+
+
 type tStatic struct {}
 var Static tStatic
 
@@ -45,33 +75,42 @@ func (_ tStatic) ServeModule(
 }
 
 
-type tTestRunner struct {}
-var TestRunner tTestRunner
+type tUser struct {}
+var User tUser
 
 
-func (_ tTestRunner) Index(
+func (_ tUser) List(
 		) string {
 	args := make(map[string]string)
 	
-	return revel.MainRouter.Reverse("TestRunner.Index", args).Url
+	return revel.MainRouter.Reverse("User.List", args).Url
 }
 
-func (_ tTestRunner) Run(
-		suite string,
-		test string,
+func (_ tUser) Create(
+		user interface{},
 		) string {
 	args := make(map[string]string)
 	
-	revel.Unbind(args, "suite", suite)
-	revel.Unbind(args, "test", test)
-	return revel.MainRouter.Reverse("TestRunner.Run", args).Url
+	revel.Unbind(args, "user", user)
+	return revel.MainRouter.Reverse("User.Create", args).Url
 }
 
-func (_ tTestRunner) List(
+func (_ tUser) Update(
+		id string,
 		) string {
 	args := make(map[string]string)
 	
-	return revel.MainRouter.Reverse("TestRunner.List", args).Url
+	revel.Unbind(args, "id", id)
+	return revel.MainRouter.Reverse("User.Update", args).Url
+}
+
+func (_ tUser) Delete(
+		id string,
+		) string {
+	args := make(map[string]string)
+	
+	revel.Unbind(args, "id", id)
+	return revel.MainRouter.Reverse("User.Delete", args).Url
 }
 
 

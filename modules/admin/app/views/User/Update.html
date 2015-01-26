@@ -1,0 +1,41 @@
+{{set . "title" "Update user"}}
+{{template "header.html" .}}
+
+<div class="col-sm-6 col-sm-offset-3">
+	
+	<div class="panel panel-default">		
+		<div class="panel-heading">
+			<h3 class="centred">Update User</h3>
+		</div>
+		<form name="create_user" method="post" action="/admin/user/update/{{.user.Id}}">
+		<div class="panel-body">	
+			{{with $field := field "user.Email" .}}		
+			<div class="form-group">
+				<label for="{{$field.Id}}">Email:</label>
+				<input type="text" id="{{$field.Id}}" name="{{$field.Name}}" value="{{$field.Value}}" class="{{$field.ErrorClass}} form-control" placeholder="Email">
+				<span class="error">{{$field.Error}}</span>
+			</div>
+			{{end}}
+			{{with $field := field "user.FirstName" .}}		
+			<div class="form-group">
+				<label for="{{$field.Id}}">First name:</label>
+				<input type="text" id="{{$field.Id}}" name="{{$field.Name}}" value="{{$field.Value}}" class="{{$field.ErrorClass}} form-control" placeholder="First name">
+				<span class="error">{{$field.Error}}</span>
+			</div>
+			{{end}}
+			{{with $field := field "user.LastName" .}}		
+			<div class="form-group">
+				<label for="{{$field.Id}}">Last name:</label>
+				<input type="text" id="{{$field.Id}}" name="{{$field.Name}}" value="{{$field.Value}}" class="{{$field.ErrorClass}} form-control" placeholder="Last name">
+				<span class="error">{{$field.Error}}</span>
+			</div>
+			{{end}}			
+		</div>
+		<div class="panel-footer">
+			<input type="submit" class="btn btn-primary btn-sm btn-block" value="Update">			
+		</div>
+		</form>
+	</div>
+</div>
+
+{{template "footer.html" .}}

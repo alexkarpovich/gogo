@@ -1,0 +1,55 @@
+{{set . "title" "Registration"}}
+{{template "header.html" .}}
+
+<div class="col-sm-6 col-sm-offset-3">
+	
+	<div class="panel panel-default">		
+		<div class="panel-heading">
+			<h3 class="centred">Registration</h3>
+		</div>
+		<form name="register_account" method="post" action="/account/user/signup">
+		<div class="panel-body">	
+			{{with $field := field "user.Email" .}}		
+			<div class="form-group">
+				<label for="{{$field.Id}}">Email:</label>
+				<input type="text" id="{{$field.Id}}" name="{{$field.Name}}" value="{{$field.Flash}}" class="{{$field.ErrorClass}} form-control" placeholder="Email">
+				<span class="error">{{$field.Error}}</span>
+			</div>
+			{{end}}
+			{{with $field := field "user.FirstName" .}}		
+			<div class="form-group">
+				<label for="{{$field.Id}}">First name:</label>
+				<input type="text" id="{{$field.Id}}" name="{{$field.Name}}" value="{{$field.Flash}}" class="{{$field.ErrorClass}} form-control" placeholder="First name">
+				<span class="error">{{$field.Error}}</span>
+			</div>
+			{{end}}
+			{{with $field := field "user.LastName" .}}		
+			<div class="form-group">
+				<label for="{{$field.Id}}">Last name:</label>
+				<input type="text" id="{{$field.Id}}" name="{{$field.Name}}" value="{{$field.Flash}}" class="{{$field.ErrorClass}} form-control" placeholder="Last name">
+				<span class="error">{{$field.Error}}</span>
+			</div>
+			{{end}}
+			{{with $field := field "user.Password" .}}		
+			<div class="form-group">
+				<label for="{{$field.Id}}">Password:</label>
+				<input type="password" id="{{$field.Id}}" name="{{$field.Name}}" value="{{$field.Flash}}" class="{{$field.ErrorClass}} form-control" placeholder="Password">
+				<span class="error">{{$field.Error}}</span>
+			</div>
+			{{end}}
+			{{with $field := field "user.ConfirmPassword" .}}		
+			<div class="form-group">
+				<label for="{{$field.Id}}">Confirm password:</label>
+				<input type="password" id="{{$field.Id}}" name="{{$field.Name}}" value="{{$field.Flash}}" class="{{$field.ErrorClass}} form-control" placeholder="Confirm password">
+				<span class="error">{{$field.Error}}</span>
+			</div>
+			{{end}}
+		</div>
+		<div class="panel-footer">
+			<input type="submit" class="btn btn-primary btn-sm btn-block" value="Sign up">			
+		</div>
+		</form>
+	</div>
+</div>
+
+{{template "footer.html" .}}
