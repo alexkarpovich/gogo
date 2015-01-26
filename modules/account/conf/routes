@@ -1,0 +1,2 @@
+*	/user/:action				AccountUser.:action
+*	/user/:action/:id			AccountUser.:action

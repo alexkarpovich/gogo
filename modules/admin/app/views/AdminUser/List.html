@@ -1,0 +1,46 @@
+{{set . "title" "User list"}}
+{{template "header.html" .}}
+
+<div class="col-sm-12">
+	<h3 class="centred">User list</h3>
+	<div class="panel panel-default">		
+		<div class="panel-heading">
+			<a href="/admin/user/create" class="btn btn-primary btn-sm">Create new user</a>
+		</div>
+		<div class="panel-body">
+			{{if .users}}
+			<table class="table">
+				<thead>
+					<th>Id</th>
+					<th>Email</th>
+					<th>First name</th>
+					<th>Last name</th>
+					<th>Joined</th>
+					<th>Updated</th>
+					<th>Actions</th>
+				</thead>
+				<tbody>
+				{{range .users}}
+					<tr>
+						<td>{{.Id}}</td>
+						<td>{{.Email}}</td>
+						<td>{{.FirstName}}</td>
+						<td>{{.LastName}}</td>
+						<td>{{.Joined}}</td>
+						<td>{{.Updated}}</td>
+						<td>
+							<a href="/admin/user/update/{{.Id}}" class="btn btn-warning btn-sm">Edit</a>
+							<a href="/admin/user/delete/{{.Id}}" class="btn btn-danger btn-sm">Delete</a>
+						</td>
+					</tr>
+				{{end}}
+				</tbody>
+			</table>
+			{{else}}
+			<div class="info">Have no users yet</div>
+			{{end}}
+		</div>
+	</div>
+</div>
+
+{{template "footer.html" .}}

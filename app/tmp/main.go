@@ -5,13 +5,14 @@ import (
 	"flag"
 	"reflect"
 	"github.com/revel/revel"
-	controllers0 "github.com/revel/revel/modules/static/app/controllers"
+	controllers2 "github.com/revel/revel/modules/static/app/controllers"
 	_ "github.com/revel/revel/modules/testrunner/app"
-	controllers1 "github.com/revel/revel/modules/testrunner/app/controllers"
+	controllers0 "github.com/revel/revel/modules/testrunner/app/controllers"
 	_ "gogo/app"
 	controllers "gogo/app/controllers"
 	models "gogo/app/models"
-	controllers2 "gogo/modules/admin/app/controllers"
+	controllers1 "gogo/modules/account/app/controllers"
+	controllers3 "gogo/modules/admin/app/controllers"
 	tests "gogo/tests"
 )
 
@@ -44,31 +45,7 @@ func main() {
 			
 		})
 	
-	revel.RegisterController((*controllers0.Static)(nil),
-		[]*revel.MethodType{
-			&revel.MethodType{
-				Name: "Serve",
-				Args: []*revel.MethodArg{ 
-					&revel.MethodArg{Name: "prefix", Type: reflect.TypeOf((*string)(nil)) },
-					&revel.MethodArg{Name: "filepath", Type: reflect.TypeOf((*string)(nil)) },
-				},
-				RenderArgNames: map[int][]string{ 
-				},
-			},
-			&revel.MethodType{
-				Name: "ServeModule",
-				Args: []*revel.MethodArg{ 
-					&revel.MethodArg{Name: "moduleName", Type: reflect.TypeOf((*string)(nil)) },
-					&revel.MethodArg{Name: "prefix", Type: reflect.TypeOf((*string)(nil)) },
-					&revel.MethodArg{Name: "filepath", Type: reflect.TypeOf((*string)(nil)) },
-				},
-				RenderArgNames: map[int][]string{ 
-				},
-			},
-			
-		})
-	
-	revel.RegisterController((*controllers1.TestRunner)(nil),
+	revel.RegisterController((*controllers0.TestRunner)(nil),
 		[]*revel.MethodType{
 			&revel.MethodType{
 				Name: "Index",
@@ -101,7 +78,61 @@ func main() {
 			
 		})
 	
-	revel.RegisterController((*controllers2.Article)(nil),
+	revel.RegisterController((*controllers1.AccountUser)(nil),
+		[]*revel.MethodType{
+			&revel.MethodType{
+				Name: "Signup",
+				Args: []*revel.MethodArg{ 
+				},
+				RenderArgNames: map[int][]string{ 
+					59: []string{ 
+					},
+				},
+			},
+			&revel.MethodType{
+				Name: "Login",
+				Args: []*revel.MethodArg{ 
+				},
+				RenderArgNames: map[int][]string{ 
+					63: []string{ 
+					},
+				},
+			},
+			&revel.MethodType{
+				Name: "Logout",
+				Args: []*revel.MethodArg{ 
+				},
+				RenderArgNames: map[int][]string{ 
+				},
+			},
+			
+		})
+	
+	revel.RegisterController((*controllers2.Static)(nil),
+		[]*revel.MethodType{
+			&revel.MethodType{
+				Name: "Serve",
+				Args: []*revel.MethodArg{ 
+					&revel.MethodArg{Name: "prefix", Type: reflect.TypeOf((*string)(nil)) },
+					&revel.MethodArg{Name: "filepath", Type: reflect.TypeOf((*string)(nil)) },
+				},
+				RenderArgNames: map[int][]string{ 
+				},
+			},
+			&revel.MethodType{
+				Name: "ServeModule",
+				Args: []*revel.MethodArg{ 
+					&revel.MethodArg{Name: "moduleName", Type: reflect.TypeOf((*string)(nil)) },
+					&revel.MethodArg{Name: "prefix", Type: reflect.TypeOf((*string)(nil)) },
+					&revel.MethodArg{Name: "filepath", Type: reflect.TypeOf((*string)(nil)) },
+				},
+				RenderArgNames: map[int][]string{ 
+				},
+			},
+			
+		})
+	
+	revel.RegisterController((*controllers3.AdminArticle)(nil),
 		[]*revel.MethodType{
 			&revel.MethodType{
 				Name: "List",
@@ -143,6 +174,48 @@ func main() {
 			
 		})
 	
+	revel.RegisterController((*controllers3.AdminUser)(nil),
+		[]*revel.MethodType{
+			&revel.MethodType{
+				Name: "List",
+				Args: []*revel.MethodArg{ 
+				},
+				RenderArgNames: map[int][]string{ 
+					37: []string{ 
+					},
+				},
+			},
+			&revel.MethodType{
+				Name: "Create",
+				Args: []*revel.MethodArg{ 
+					&revel.MethodArg{Name: "user", Type: reflect.TypeOf((**models.User)(nil)) },
+				},
+				RenderArgNames: map[int][]string{ 
+					80: []string{ 
+					},
+				},
+			},
+			&revel.MethodType{
+				Name: "Update",
+				Args: []*revel.MethodArg{ 
+					&revel.MethodArg{Name: "id", Type: reflect.TypeOf((*string)(nil)) },
+				},
+				RenderArgNames: map[int][]string{ 
+					132: []string{ 
+					},
+				},
+			},
+			&revel.MethodType{
+				Name: "Delete",
+				Args: []*revel.MethodArg{ 
+					&revel.MethodArg{Name: "id", Type: reflect.TypeOf((*string)(nil)) },
+				},
+				RenderArgNames: map[int][]string{ 
+				},
+			},
+			
+		})
+	
 	revel.DefaultValidationKeys = map[string]map[int]string{ 
 		"gogo/app/models.Article.Validate": { 
 			19: "article.Title",
@@ -150,12 +223,19 @@ func main() {
 			21: "article.Author",
 		},
 		"gogo/app/models.User.Validate": { 
-			17: "this.Email",
-			18: "this.FirstName",
-			19: "this.LastName",
-			20: "this.Password",
-			21: "this.ConfirmPassword",
-			22: "this.Password",
+			20: "this.Email",
+			21: "this.FirstName",
+			22: "this.LastName",
+		},
+		"gogo/modules/account/app/controllers.AccountUser.Signup": { 
+			26: "user.Password",
+			27: "user.ConfirmPassword",
+			28: "user.Password",
+		},
+		"gogo/modules/admin/app/controllers.AdminUser.Create": { 
+			45: "user.Password",
+			46: "user.ConfirmPassword",
+			47: "user.Password",
 		},
 	}
 	revel.TestSuites = []interface{}{ 
