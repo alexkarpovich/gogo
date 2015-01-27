@@ -11,4 +11,3 @@ type App struct {
 func (c App) Index() revel.Result {	
 	return c.Render()
 }
-

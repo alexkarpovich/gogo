@@ -19,18 +19,18 @@
       </ul>
       
       <ul class="nav navbar-nav navbar-right">
+      {{if .loggedInUser}}
+        <li class="dropdown">
+          <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">{{.loggedInUser.FirstName}} {{.loggedInUser.LastName}}<span class="caret"></span></a>
+          <ul class="dropdown-menu" role="menu">
+            <li><a href="/account/user/profile">Profile</a></li>
+            <li><a href="/account/user/logout">Log out</a></li>
+          </ul>
+        </li>        
+      {{else}}  
         <li><a href="/account/user/signup">Sign up</a></li>
         <li><a href="/account/user/login">Log in</a></li>
-        <li class="dropdown">
-          <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">{{getCurrentUser}} <span class="caret"></span></a>
-          <ul class="dropdown-menu" role="menu">
-            <li><a href="#">Action</a></li>
-            <li><a href="#">Another action</a></li>
-            <li><a href="#">Something else here</a></li>
-            <li class="divider"></li>
-            <li><a href="#">Separated link</a></li>
-          </ul>
-        </li>
+      {{end}}  
       </ul>
     </div><!-- /.navbar-collapse -->
   </div><!-- /.container-fluid -->

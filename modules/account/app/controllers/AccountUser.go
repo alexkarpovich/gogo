@@ -101,5 +101,10 @@ func (this AccountUser) Login() revel.Result {
 }
 
 func (this AccountUser) Logout() revel.Result {
-	return this.Redirect("/admin/user/list")
+
+	for k := range this.Session {
+		delete(this.Session, k)
+	}
+
+	return this.Redirect("/")
 }

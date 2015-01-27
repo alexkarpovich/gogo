@@ -2,11 +2,34 @@ package app
 
 import (
 	"github.com/revel/revel"
-	//"gogo/common/db"
-	//"gogo/app/models"
-	//"gopkg.in/mgo.v2/bson"
-	//"os"
+	"gogo/common/db"
+	"gogo/app/models"
+	"gopkg.in/mgo.v2/bson"
+	"os"
 )
+
+func checkLoggedIn(this *revel.Controller) revel.Result {
+  if id,ok := this.Session["user"]; ok {
+    connection,err := db.Connect()
+    if err != nil {
+      os.Exit(1)
+    }
+
+    var loggedInUser *models.User
+
+    err = connection.DB("blog").C("users").Find(bson.M{"_id":id}).One(&loggedInUser)
+    if err != nil {
+      os.Exit(1)
+    }
+
+    this.RenderArgs["loggedInUser"] = loggedInUser
+
+    return nil
+  }
+
+  this.RenderArgs["loggedInUser"] = nil
+  return nil
+}
 
 func init() {
 	// Filters is the default set of global filters.
@@ -24,6 +47,7 @@ func init() {
 		revel.CompressFilter,          // Compress the result.
 		revel.ActionInvoker,           // Invoke the action.
 	}
+	revel.InterceptFunc(checkLoggedIn, revel.BEFORE, &revel.Controller{})
 }
 
 // TODO turn this into revel.HeaderFilter
