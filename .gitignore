@@ -5,3 +5,5 @@ public/styles/css*
 public/js/dist*
 public/fonts/*
 public/bower_components*
+app/tmp*
+app/routes*

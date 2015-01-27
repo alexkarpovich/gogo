@@ -1,1 +1,2 @@
-*	/:controller/:action		:controller.:action
+*	/user/:action				AccountUser.:action
+*	/user/:action/:id			AccountUser.:action

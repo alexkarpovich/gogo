@@ -1,0 +1,34 @@
+{{set . "title" "Registration"}}
+{{template "header.html" .}}
+
+<div class="col-sm-6 col-sm-offset-3">
+	
+	<div class="panel panel-default">		
+		<div class="panel-heading">
+			<h3 class="centred">Log in</h3>
+		</div>
+		<form name="register_account" method="post" action="/account/user/login">
+		<div class="panel-body">	
+			{{with $field := field "user.Email" .}}		
+			<div class="form-group">
+				<label for="{{$field.Id}}">Email:</label>
+				<input type="text" id="{{$field.Id}}" name="{{$field.Name}}" value="{{$field.Flash}}" class="{{$field.ErrorClass}} form-control" placeholder="Email">
+				<span class="error">{{$field.Error}}</span>
+			</div>
+			{{end}}			
+			{{with $field := field "user.Password" .}}		
+			<div class="form-group">
+				<label for="{{$field.Id}}">Password:</label>
+				<input type="password" id="{{$field.Id}}" name="{{$field.Name}}" value="{{$field.Flash}}" class="{{$field.ErrorClass}} form-control" placeholder="Password">
+				<span class="error">{{$field.Error}}</span>
+			</div>
+			{{end}}			
+		</div>
+		<div class="panel-footer">
+			<input type="submit" class="btn btn-success btn-sm btn-block" value="Log in">			
+		</div>
+		</form>
+	</div>
+</div>
+
+{{template "footer.html" .}}

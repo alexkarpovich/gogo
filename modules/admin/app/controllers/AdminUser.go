@@ -5,16 +5,17 @@ import (
 	"gopkg.in/mgo.v2/bson"
 	"gogo/app/models"
 	"gogo/common/db"
+	"crypto/md5"
 	"time"
 	"fmt"
 	"os"
 )
 
-type User struct {
+type AdminUser struct {
 	*revel.Controller
 }
 
-func (this User) List() revel.Result {
+func (this AdminUser) List() revel.Result {
 	session,err := db.Connect()
 	if err != nil {
 		fmt.Printf("Error connection")
@@ -37,7 +38,7 @@ func (this User) List() revel.Result {
 	return this.Render()
 }
 
-func (this User) Create(user *models.User) revel.Result {
+func (this AdminUser) Create(user *models.User) revel.Result {
 	if this.Request.Method == "POST" {
 
 		user.Validate(this.Validation)
@@ -49,7 +50,7 @@ func (this User) Create(user *models.User) revel.Result {
 		if this.Validation.HasErrors() {
 			this.Validation.Keep()
 			this.FlashParams()
-			return this.Redirect(User.Create)
+			return this.Redirect(AdminUser.Create)
 		}
 
 		session,err := db.Connect()
@@ -60,12 +61,14 @@ func (this User) Create(user *models.User) revel.Result {
 
 		defer session.Close()
 
+		cryptedPassword := md5.Sum([]byte(user.Password))
+
 		err = session.DB("blog").C("users").Insert(models.User{
 			Id: bson.NewObjectId().Hex(),
 			Email: user.Email,
 			FirstName: user.FirstName,
 			LastName: user.LastName,
-			Password: user.Password,
+			Password: string(cryptedPassword[:]),
 			Joined: time.Now(),
 			Updated: time.Now()})
 
@@ -74,13 +77,13 @@ func (this User) Create(user *models.User) revel.Result {
 			os.Exit(1)
 		}
 
-		return this.Redirect(User.List)
+		return this.Redirect(AdminUser.List)
 	} 
 
 	return this.Render()
 }
 
-func (this User) Update(id string) revel.Result {
+func (this AdminUser) Update(id string) revel.Result {
 
 	session,err := db.Connect()
 	if err != nil {
@@ -115,7 +118,7 @@ func (this User) Update(id string) revel.Result {
 			os.Exit(1)
 		}
 
-		return this.Redirect(User.List)
+		return this.Redirect(AdminUser.List)
 	} 	
 
 	var user *models.User
@@ -132,7 +135,7 @@ func (this User) Update(id string) revel.Result {
 	return this.Render()
 }
 
-func (this User) Delete(id string) revel.Result {
+func (this AdminUser) Delete(id string) revel.Result {
 	session,err := db.Connect()
 	if err != nil {
 		fmt.Printf("Error connection")
@@ -148,6 +151,6 @@ func (this User) Delete(id string) revel.Result {
 		os.Exit(1)
 	}
 
-	return this.Redirect(User.List)
+	return this.Redirect(AdminUser.List)
 }
 

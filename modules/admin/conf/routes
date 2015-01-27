@@ -1,2 +1,4 @@
-*	/:controller/:action		:controller.:action
-*	/:controller/:action/:id	:controller.:action
+*	/article/:action		AdminArticle.:action
+*	/article/:action/:id	AdminArticle.:action
+* 	/user/:action			AdminUser.:action
+* 	/user/:action/:id		AdminUser.:action

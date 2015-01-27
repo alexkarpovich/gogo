@@ -10,11 +10,11 @@ import (
 	"time"
 )
 
-type Article struct {
+type AdminArticle struct {
 	*revel.Controller
 }
 
-func (this Article) List() revel.Result {
+func (this AdminArticle) List() revel.Result {
 
 	session,err := db.Connect()
 	if err != nil {
@@ -38,7 +38,7 @@ func (this Article) List() revel.Result {
 	return this.Render()
 }
 
-func (this Article) Create(article *models.Article) revel.Result {
+func (this AdminArticle) Create(article *models.Article) revel.Result {
 	if this.Request.Method == "POST" {
 
 		article.Validate(this.Validation)
@@ -46,7 +46,7 @@ func (this Article) Create(article *models.Article) revel.Result {
 		if this.Validation.HasErrors() {
 			this.Validation.Keep()
 			this.FlashParams()
-			return this.Redirect(Article.Create)
+			return this.Redirect(AdminArticle.Create)
 		}
 
 		session,err := db.Connect()
@@ -70,13 +70,13 @@ func (this Article) Create(article *models.Article) revel.Result {
 			os.Exit(1)
 		}
 
-		return this.Redirect(Article.List)
+		return this.Redirect(AdminArticle.List)
 	} 
 
 	return this.Render()
 }
 
-func (this Article) Update(id string) revel.Result {
+func (this AdminArticle) Update(id string) revel.Result {
 
 	session,err := db.Connect()
 	if err != nil {
@@ -111,7 +111,7 @@ func (this Article) Update(id string) revel.Result {
 			os.Exit(1)
 		}
 
-		return this.Redirect(Article.List)
+		return this.Redirect(AdminArticle.List)
 	} 	
 
 	var article *models.Article
@@ -128,7 +128,7 @@ func (this Article) Update(id string) revel.Result {
 	return this.Render()
 }
 
-func (this Article) Delete(id string) revel.Result {
+func (this AdminArticle) Delete(id string) revel.Result {
 	session,err := db.Connect()
 	if err != nil {
 		fmt.Printf("Error connection")
@@ -144,5 +144,5 @@ func (this Article) Delete(id string) revel.Result {
 		os.Exit(1)
 	}
 
-	return this.Redirect(Article.List)
+	return this.Redirect(AdminArticle.List)
 }
