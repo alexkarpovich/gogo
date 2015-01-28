@@ -126,14 +126,22 @@ func (this AdminUser) Update(id string) revel.Result {
 			this.Validation.Keep()
 			this.FlashParams()
 			return this.Redirect("/admin/user/update/"+id)
-		}		
+		}	
+
+		var role *models.Role	
+
+		err = session.DB("blog").C("roles").Find(bson.M{"_id":this.Params.Get("role")}).One(&role)
+
+		if err!=nil {
+			os.Exit(1)
+		}
 
 		err = session.DB("blog").C("users").Update(bson.M{"_id": id}, bson.M{
 			"$set": bson.M{
 				"email": user.Email,
 				"firstName": user.FirstName,
 				"lastName": user.LastName,
-				"role": user.Role,
+				"role": role,
 				"updated": time.Now()}})
 
 		if err != nil {
@@ -144,6 +152,7 @@ func (this AdminUser) Update(id string) revel.Result {
 	} 	
 
 	var user *models.User
+	var roles []*models.Role
 
 	err = session.DB("blog").C("users").Find(bson.M{"_id":id}).One(&user)
 
@@ -151,7 +160,14 @@ func (this AdminUser) Update(id string) revel.Result {
 		os.Exit(1)
 	}
 
+	err = session.DB("blog").C("roles").Find(bson.M{}).All(&roles)
+
+	if err!=nil {
+		os.Exit(1)
+	}
+
 	this.RenderArgs["user"] = user
+	this.RenderArgs["roles"] = roles
 
 	return this.Render()
 }

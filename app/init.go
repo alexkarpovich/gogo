@@ -51,6 +51,8 @@ func init() {
 		revel.ActionInvoker,           // Invoke the action.
 	}
 	revel.InterceptFunc(checkLoggedIn, revel.BEFORE, &revel.Controller{})
+
+	revel.TemplateFuncs["equal"] = func(a, b interface{}) bool { return a == b }
 }
 
 // TODO turn this into revel.HeaderFilter

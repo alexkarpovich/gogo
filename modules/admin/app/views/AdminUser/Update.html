@@ -29,7 +29,16 @@
 				<input type="text" id="{{$field.Id}}" name="{{$field.Name}}" value="{{$field.Value}}" class="{{$field.ErrorClass}} form-control" placeholder="Last name">
 				<span class="error">{{$field.Error}}</span>
 			</div>
-			{{end}}			
+			{{end}}	
+			<div class="form-group">
+				<label for="role_id">Role:</label>
+				<select id="role_id" name="role" class="form-control">
+					{{$selectedId:=.user.Role.Id}}
+					{{range .roles}}
+					<option value="{{.Id}}" {{if equal .Id $selectedId}}selected{{end}}>{{.Name}}</option>
+					{{end}}
+				</select>
+			</div>						
 		</div>
 		<div class="panel-footer">
 			<input type="submit" class="btn btn-primary btn-sm btn-block" value="Update">			

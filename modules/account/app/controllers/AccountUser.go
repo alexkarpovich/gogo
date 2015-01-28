@@ -43,7 +43,7 @@ func (this AccountUser) Signup() revel.Result {
 
 		var role models.Role
 
-		err = session.DB("blog").C("roles").Find(bson.M{"name":"Employee"}).One(&role)
+		err = connection.DB("blog").C("roles").Find(bson.M{"name":"Employee"}).One(&role)
 
 		err = connection.DB("blog").C("users").Insert(models.User{
 			Id: bson.NewObjectId().Hex(),
