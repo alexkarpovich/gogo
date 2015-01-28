@@ -1,0 +1,38 @@
+{{set . "title" "Registration"}}
+{{template "header.html" .}}
+
+<div class="col-sm-6 col-sm-offset-3">
+	
+	<div class="panel panel-default">		
+		<div class="panel-heading">
+			<h3 class="centred">User profile</h3>			
+		</div>
+		<div class="panel-body">
+				<table colspacing="10" class="table">
+					<tr>
+						<td><strong>UserID</strong></td><td>{{.loggedInUser.Id}}</td>						
+					</tr>
+					<tr>
+						<td><strong>Email</strong></td><td>{{.loggedInUser.Email}}</td>						
+					</tr>
+					<tr>
+						<td><strong>First name</strong></td><td>{{.loggedInUser.FirstName}}</td>						
+					</tr>
+					<tr>
+						<td><strong>Last name</strong></td><td>{{.loggedInUser.LastName}}</td>						
+					</tr>
+					<tr>
+						<td><strong>Password</strong></td><td>{{.loggedInUser.Password}}</td>						
+					</tr>
+					<tr>
+						<td><strong>Joined</strong></td><td>{{.loggedInUser.Joined}}</td>						
+					</tr>
+					<tr>
+						<td><strong>Updated</strong></td><td>{{.loggedInUser.Updated}}</td>						
+					</tr>
+				</table>
+			</div>
+	</div>
+</div>
+
+{{template "footer.html" .}}

@@ -15,6 +15,8 @@ func checkLoggedIn(this *revel.Controller) revel.Result {
       os.Exit(1)
     }
 
+    defer connection.Close()
+
     var loggedInUser *models.User
 
     err = connection.DB("blog").C("users").Find(bson.M{"_id":id}).One(&loggedInUser)
@@ -27,7 +29,8 @@ func checkLoggedIn(this *revel.Controller) revel.Result {
     return nil
   }
 
-  this.RenderArgs["loggedInUser"] = nil
+  delete(this.RenderArgs, "loggedInUser")
+
   return nil
 }
 

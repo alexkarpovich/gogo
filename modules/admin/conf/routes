@@ -2,3 +2,5 @@
 *	/article/:action/:id	AdminArticle.:action
 * 	/user/:action			AdminUser.:action
 * 	/user/:action/:id		AdminUser.:action
+* 	/role/:action			AdminRole.:action
+* 	/role/:action/:id		AdminRole.:action

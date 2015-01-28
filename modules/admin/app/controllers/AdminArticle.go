@@ -57,11 +57,19 @@ func (this AdminArticle) Create(article *models.Article) revel.Result {
 
 		defer session.Close()
 
+		user, ok := this.RenderArgs["loggedInUser"]
+		
+		if !ok {
+			return this.Redirect("/account/user/login")
+		}
+
+		author := user.(*models.User)
+
 		err = session.DB("blog").C("articles").Insert(models.Article{
 			Id: bson.NewObjectId().Hex(),
 			Title: article.Title,
 			Content: article.Content,
-			Author: article.Author,
+			Author: author.FirstName + " " + author.LastName,
 			Created: time.Now(),
 			Updated: time.Now()})
 
@@ -103,7 +111,6 @@ func (this AdminArticle) Update(id string) revel.Result {
 		err = session.DB("blog").C("articles").Update(bson.M{"_id": id}, bson.M{
 			"$set": bson.M{
 				"title": article.Title,
-				"author": article.Author,
 				"content": article.Content,
 				"updated": time.Now()}})
 

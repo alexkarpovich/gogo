@@ -30,6 +30,14 @@
 				<span class="error">{{$field.Error}}</span>
 			</div>
 			{{end}}
+			<div class="form-group">
+				<label for="role_id">Role:</label>
+				<select id="role_id" name="role" class="form-control">
+					{{range .roles}}
+					<option value="{{.Id}}">{{.Name}}</option>
+					{{end}}
+				</select>
+			</div>	
 			{{with $field := field "user.Password" .}}		
 			<div class="form-group">
 				<label for="{{$field.Id}}">Password:</label>

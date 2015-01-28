@@ -1,0 +1,38 @@
+{{set . "title" "Role list"}}
+{{template "header.html" .}}
+
+<div class="col-sm-12">
+	<h3 class="centred">Role list</h3>
+	<div class="panel panel-default">		
+		<div class="panel-heading">
+			<a href="/admin/role/create" class="btn btn-primary btn-sm">Create new role</a>
+		</div>
+		<div class="panel-body">
+			{{if .roles}}
+			<table class="table">
+				<thead>
+					<th>Id</th>
+					<th>Name</th>
+					<th>Actions</th>
+				</thead>
+				<tbody>
+				{{range .roles}}
+					<tr>
+						<td>{{.Id}}</td>
+						<td>{{.Name}}</td>
+						<td>
+							<a href="/admin/role/update/{{.Id}}" class="btn btn-warning btn-sm">Edit</a>
+							<a href="/admin/role/delete/{{.Id}}" class="btn btn-danger btn-sm">Delete</a>
+						</td>
+					</tr>
+				{{end}}
+				</tbody>
+			</table>
+			{{else}}
+			<div class="info">Have no roles yet</div>
+			{{end}}
+		</div>
+	</div>
+</div>
+
+{{template "footer.html" .}}

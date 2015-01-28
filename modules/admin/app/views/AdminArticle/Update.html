@@ -16,13 +16,7 @@
 				<span class="error">{{$field.Error}}</span>
 			</div>
 			{{end}}
-			{{with $field := field "article.Author" .}}		
-			<div class="form-group">
-				<label for="{{$field.Id}}">Article author:</label>
-				<input type="text" id="{{$field.Id}}" name="{{$field.Name}}" value="{{$field.Value}}" class="{{$field.ErrorClass}} form-control" placeholder="Article author">
-				<span class="error">{{$field.Error}}</span>
-			</div>
-			{{end}}
+			
 			{{with $field := field "article.Content" .}}		
 			<div class="form-group">
 				<label for="{{$field.Id}}">Article content:</label>

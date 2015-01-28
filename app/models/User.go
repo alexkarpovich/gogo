@@ -10,6 +10,7 @@ type User struct {
 	Email string `bson:"email"`
 	FirstName string `bson:"firstName"`
 	LastName string `bson:"lastName"`
+	Role Role `bson:"role"`
 	Password string `bson:"password"`
 	ConfirmPassword string `bson:"confirmPassword"`
 	Joined time.Time `bson:"joined"`

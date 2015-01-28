@@ -18,5 +18,4 @@ type Article struct {
 func (article Article) Validate(v *revel.Validation) {
 	v.Required(article.Title)
 	v.Required(article.Content)
-	v.Required(article.Author)
 }

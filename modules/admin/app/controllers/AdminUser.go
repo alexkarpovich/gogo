@@ -43,6 +43,7 @@ func (this AdminUser) Create(user *models.User) revel.Result {
 
 		user.Validate(this.Validation)
 
+		this.Validation.Required(user.Role)
 		this.Validation.Required(user.Password)
 		this.Validation.Required(user.ConfirmPassword)
 		this.Validation.Required(user.Password==user.ConfirmPassword).Message("Not matching passwords")
@@ -55,7 +56,6 @@ func (this AdminUser) Create(user *models.User) revel.Result {
 
 		session,err := db.Connect()
 		if err != nil {
-			fmt.Printf("Error connection")
 			os.Exit(1)
 		}
 
@@ -63,22 +63,43 @@ func (this AdminUser) Create(user *models.User) revel.Result {
 
 		cryptedPassword := md5.Sum([]byte(user.Password))
 
+		var role models.Role
+
+		err = session.DB("blog").C("roles").Find(bson.M{"_id":this.Params.Get("role")}).One(&role)
+
 		err = session.DB("blog").C("users").Insert(models.User{
 			Id: bson.NewObjectId().Hex(),
 			Email: user.Email,
 			FirstName: user.FirstName,
 			LastName: user.LastName,
+			Role: role,
 			Password: string(cryptedPassword[:]),
 			Joined: time.Now(),
 			Updated: time.Now()})
 
 		if err!=nil {
-			fmt.Printf("Find error")
 			os.Exit(1)
 		}
 
 		return this.Redirect(AdminUser.List)
 	} 
+
+	session,err := db.Connect()
+	if err != nil {
+		os.Exit(1)
+	}
+
+	defer session.Close()
+
+	var roles []models.Role
+
+	err = session.DB("blog").C("roles").Find(bson.M{}).All(&roles)
+
+	if err!=nil {
+		os.Exit(1)
+	}
+
+	this.RenderArgs["roles"] = roles
 
 	return this.Render()
 }
@@ -112,6 +133,7 @@ func (this AdminUser) Update(id string) revel.Result {
 				"email": user.Email,
 				"firstName": user.FirstName,
 				"lastName": user.LastName,
+				"role": user.Role,
 				"updated": time.Now()}})
 
 		if err != nil {
@@ -126,7 +148,6 @@ func (this AdminUser) Update(id string) revel.Result {
 	err = session.DB("blog").C("users").Find(bson.M{"_id":id}).One(&user)
 
 	if err!=nil {
-		fmt.Printf("Find error")
 		os.Exit(1)
 	}
 
@@ -138,7 +159,6 @@ func (this AdminUser) Update(id string) revel.Result {
 func (this AdminUser) Delete(id string) revel.Result {
 	session,err := db.Connect()
 	if err != nil {
-		fmt.Printf("Error connection")
 		os.Exit(1)
 	}
 

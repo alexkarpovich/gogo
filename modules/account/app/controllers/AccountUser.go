@@ -41,11 +41,16 @@ func (this AccountUser) Signup() revel.Result {
 
 		cryptedPassword := md5.Sum([]byte(user.Password))
 
+		var role models.Role
+
+		err = session.DB("blog").C("roles").Find(bson.M{"name":"Employee"}).One(&role)
+
 		err = connection.DB("blog").C("users").Insert(models.User{
 			Id: bson.NewObjectId().Hex(),
 			Email: user.Email,
 			FirstName: user.FirstName,
 			LastName: user.LastName,
+			Role: role,
 			Password: string(cryptedPassword[:]),
 			Joined: time.Now(),
 			Updated: time.Now()})
@@ -107,4 +112,13 @@ func (this AccountUser) Logout() revel.Result {
 	}
 
 	return this.Redirect("/")
+}
+
+func (this AccountUser) Profile() revel.Result {
+
+	if _, ok := this.RenderArgs["loggedInUser"]; !ok {
+		return this.Redirect(AccountUser.Login)
+	}
+
+	return this.Render()
 }
