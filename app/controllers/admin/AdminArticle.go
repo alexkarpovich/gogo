@@ -11,7 +11,7 @@ import (
 )
 
 type AdminArticle struct {
-	*revel.Controller
+	BaseController
 }
 
 func (this AdminArticle) List() revel.Result {

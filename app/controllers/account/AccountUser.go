@@ -11,7 +11,7 @@ import (
 )
 
 type AccountUser struct {
-	*revel.Controller
+	BaseController
 }
 
 func (this AccountUser) Signup() revel.Result {

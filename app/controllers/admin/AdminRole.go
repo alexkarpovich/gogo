@@ -9,7 +9,7 @@ import (
 )
 
 type AdminRole struct {
-	*revel.Controller
+	BaseController
 }
 
 func (this AdminRole) List() revel.Result {

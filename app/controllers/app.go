@@ -5,7 +5,7 @@ import (
 )
 
 type App struct {
-	*revel.Controller
+	BaseController
 }
 
 func (c App) Index() revel.Result {	

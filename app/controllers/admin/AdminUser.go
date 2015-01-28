@@ -12,7 +12,7 @@ import (
 )
 
 type AdminUser struct {
-	*revel.Controller
+	BaseController
 }
 
 func (this AdminUser) List() revel.Result {

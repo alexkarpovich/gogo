@@ -5,14 +5,13 @@ import (
 	"gogo/common/db"
 	"gogo/app/models"
 	"gopkg.in/mgo.v2/bson"
-	"os"
 )
 
 func checkLoggedIn(this *revel.Controller) revel.Result {
   if id,ok := this.Session["user"]; ok {
     connection,err := db.Connect()
     if err != nil {
-      os.Exit(1)
+      panic(err)
     }
 
     defer connection.Close()
@@ -21,7 +20,7 @@ func checkLoggedIn(this *revel.Controller) revel.Result {
 
     err = connection.DB("blog").C("users").Find(bson.M{"_id":id}).One(&loggedInUser)
     if err != nil {
-      os.Exit(1)
+      panic(err)
     }
 
     this.RenderArgs["loggedInUser"] = loggedInUser
@@ -50,7 +49,7 @@ func init() {
 		revel.CompressFilter,          // Compress the result.
 		revel.ActionInvoker,           // Invoke the action.
 	}
-	revel.InterceptFunc(checkLoggedIn, revel.BEFORE, &revel.Controller{})
+	revel.InterceptFunc(checkLoggedIn, revel.BEFORE, &revel.Controller{})	
 
 	revel.TemplateFuncs["equal"] = func(a, b interface{}) bool { return a == b }
 }
