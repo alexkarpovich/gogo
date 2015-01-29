@@ -16,22 +16,9 @@ type AdminUser struct {
 }
 
 func (this AdminUser) List() revel.Result {
-	session,err := db.Connect()
-	if err != nil {
-		fmt.Printf("Error connection")
-		os.Exit(1)
-	}
-
-	defer session.Close()
-
 	var users []models.User
 
-	err = session.DB("blog").C("users").Find(bson.M{}).All(&users)
-
-	if err!=nil {
-		fmt.Printf("Find error")
-		os.Exit(1)
-	}
+	this.FindAll("users", &users)	
 
 	this.RenderArgs["users"] = users
 
