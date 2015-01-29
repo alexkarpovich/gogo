@@ -4,10 +4,8 @@ import (
 	"github.com/revel/revel"
 	"gogo/app/models"
 	"gopkg.in/mgo.v2/bson"
-	"gogo/common/db"
 	"crypto/md5"
 	"time"
-	"os"
 )
 
 type AccountUser struct {
@@ -33,19 +31,13 @@ func (this AccountUser) Signup() revel.Result {
 			return this.Redirect(AccountUser.Signup)
 		}
 
-		connection,err := db.Connect()
-		if err != nil {
-			os.Exit(1)
-		}
-		defer connection.Close()
-
 		cryptedPassword := md5.Sum([]byte(user.Password))
 
 		var role models.Role
 
-		err = connection.DB("blog").C("roles").Find(bson.M{"name":"Employee"}).One(&role)
+		this.FindOneEntity("roles", bson.M{"name":"Employee"}, &role)
 
-		err = connection.DB("blog").C("users").Insert(models.User{
+		this.InsertEntity("users", models.User{
 			Id: bson.NewObjectId().Hex(),
 			Email: user.Email,
 			FirstName: user.FirstName,
@@ -54,9 +46,6 @@ func (this AccountUser) Signup() revel.Result {
 			Password: string(cryptedPassword[:]),
 			Joined: time.Now(),
 			Updated: time.Now()})
-		if err != nil {
-			os.Exit(1)
-		}
 
 		return this.Redirect("/admin/user/list")
 	}
@@ -80,20 +69,11 @@ func (this AccountUser) Login() revel.Result {
 			return this.Redirect(AccountUser.Login)
 		}
 
-		connection,err := db.Connect()
-		if err != nil {
-			os.Exit(1)
-		}
-		defer connection.Close()
-
 		var loggedInUser models.User
 
 		cryptedPassword := md5.Sum([]byte(user.Password))
 
-		err = connection.DB("blog").C("users").Find(bson.M{"email":user.Email, "password":string(cryptedPassword[:])}).One(&loggedInUser)
-		if err != nil {
-			os.Exit(1)
-		}
+		this.FindOneEntity("users", bson.M{"email":user.Email, "password":string(cryptedPassword[:])}, &loggedInUser)
 
 		this.Session = make(revel.Session)
 

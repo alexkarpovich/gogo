@@ -6,5 +6,6 @@ import (
 
 func init() {
 	revel.InterceptMethod((*BaseController).Startup, revel.BEFORE)
-	revel.InterceptMethod((*BaseController).Shutdown, revel.AFTER)
+	revel.InterceptMethod((*BaseController).CheckLoggedIn, revel.BEFORE)
+	revel.InterceptMethod((*BaseController).Shutdown, revel.AFTER)	
 }

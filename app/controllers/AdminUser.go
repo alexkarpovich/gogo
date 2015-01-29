@@ -4,11 +4,8 @@ import (
 	"github.com/revel/revel"
 	"gopkg.in/mgo.v2/bson"
 	"gogo/app/models"
-	"gogo/common/db"
 	"crypto/md5"
 	"time"
-	"fmt"
-	"os"
 )
 
 type AdminUser struct {
@@ -18,7 +15,7 @@ type AdminUser struct {
 func (this AdminUser) List() revel.Result {
 	var users []models.User
 
-	this.FindAll("users", &users)	
+	this.FindAllEntities("users", &users)	
 
 	this.RenderArgs["users"] = users
 
@@ -41,20 +38,13 @@ func (this AdminUser) Create(user *models.User) revel.Result {
 			return this.Redirect(AdminUser.Create)
 		}
 
-		session,err := db.Connect()
-		if err != nil {
-			os.Exit(1)
-		}
-
-		defer session.Close()
-
 		cryptedPassword := md5.Sum([]byte(user.Password))
 
 		var role models.Role
 
-		err = session.DB("blog").C("roles").Find(bson.M{"_id":this.Params.Get("role")}).One(&role)
+		this.FindOneEntity("roles", bson.M{"_id":this.Params.Get("role")}, &role)
 
-		err = session.DB("blog").C("users").Insert(models.User{
+		this.InsertEntity("users", models.User{
 			Id: bson.NewObjectId().Hex(),
 			Email: user.Email,
 			FirstName: user.FirstName,
@@ -64,27 +54,12 @@ func (this AdminUser) Create(user *models.User) revel.Result {
 			Joined: time.Now(),
 			Updated: time.Now()})
 
-		if err!=nil {
-			os.Exit(1)
-		}
-
 		return this.Redirect(AdminUser.List)
 	} 
 
-	session,err := db.Connect()
-	if err != nil {
-		os.Exit(1)
-	}
-
-	defer session.Close()
-
 	var roles []models.Role
 
-	err = session.DB("blog").C("roles").Find(bson.M{}).All(&roles)
-
-	if err!=nil {
-		os.Exit(1)
-	}
+	this.FindAllEntities("roles", &roles)
 
 	this.RenderArgs["roles"] = roles
 
@@ -92,14 +67,6 @@ func (this AdminUser) Create(user *models.User) revel.Result {
 }
 
 func (this AdminUser) Update(id string) revel.Result {
-
-	session,err := db.Connect()
-	if err != nil {
-		fmt.Printf("Error connection")
-		os.Exit(1)
-	}
-
-	defer session.Close()
 
 	if this.Request.Method == "POST" {
 
@@ -117,13 +84,8 @@ func (this AdminUser) Update(id string) revel.Result {
 
 		var role *models.Role	
 
-		err = session.DB("blog").C("roles").Find(bson.M{"_id":this.Params.Get("role")}).One(&role)
-
-		if err!=nil {
-			os.Exit(1)
-		}
-
-		err = session.DB("blog").C("users").Update(bson.M{"_id": id}, bson.M{
+		this.FindOneEntity("roles", bson.M{"_id":this.Params.Get("role")}, &role)
+		this.UpdateEntity("users", bson.M{"_id": id}, bson.M{
 			"$set": bson.M{
 				"email": user.Email,
 				"firstName": user.FirstName,
@@ -131,27 +93,15 @@ func (this AdminUser) Update(id string) revel.Result {
 				"role": role,
 				"updated": time.Now()}})
 
-		if err != nil {
-			os.Exit(1)
-		}
-
 		return this.Redirect(AdminUser.List)
 	} 	
 
 	var user *models.User
 	var roles []*models.Role
 
-	err = session.DB("blog").C("users").Find(bson.M{"_id":id}).One(&user)
-
-	if err!=nil {
-		os.Exit(1)
-	}
-
-	err = session.DB("blog").C("roles").Find(bson.M{}).All(&roles)
-
-	if err!=nil {
-		os.Exit(1)
-	}
+	this.FindOneEntity("users", bson.M{"_id":id}, &user)
+	
+	this.FindAllEntities("roles", &roles)
 
 	this.RenderArgs["user"] = user
 	this.RenderArgs["roles"] = roles
@@ -160,19 +110,7 @@ func (this AdminUser) Update(id string) revel.Result {
 }
 
 func (this AdminUser) Delete(id string) revel.Result {
-	session,err := db.Connect()
-	if err != nil {
-		os.Exit(1)
-	}
-
-	defer session.Close()
-
-	err = session.DB("blog").C("users").Remove(bson.M{"_id":id})
-
-	if err!=nil {
-		fmt.Printf("Delete error")
-		os.Exit(1)
-	}
+	this.DeleteEntity("users", bson.M{"_id":id})
 
 	return this.Redirect(AdminUser.List)
 }

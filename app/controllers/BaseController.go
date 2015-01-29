@@ -2,6 +2,7 @@ package controllers
 
 import (
 	"github.com/revel/revel"
+	"gogo/app/models"
 	"gopkg.in/mgo.v2"
 	"gopkg.in/mgo.v2/bson"
 )
@@ -12,9 +13,9 @@ type BaseController struct {
 }
 
 func (this *BaseController) Startup() revel.Result {
-	HOST := revel.Config.StringDefault("mgo.host","")
+	HOST := revel.Config.StringDefault("mgo.host", "")
 
-	connection,err := mgo.Dial("mongodb://"+HOST)
+	connection, err := mgo.Dial("mongodb://" + HOST)
 	if err != nil {
 		panic(err)
 	}
@@ -32,23 +33,54 @@ func (this *BaseController) Shutdown() revel.Result {
 	return nil
 }
 
-func (this BaseController) Insert(collection string, entity interface {}) {
-	err := this.Storage.DB("blog").C(collection).Insert(entity)
+func (this BaseController) InsertEntity(collection string, entity interface{}) {
+	err := this.Storage.DB(revel.Config.StringDefault("mgo.database", "")).C(collection).Insert(entity)
 	if err != nil {
 		panic(err)
 	}
 }
 
-func (this BaseController) FindAll(collection string, entities ...interface {}) {
-	err := this.Storage.DB("blog").C(collection).Find(bson.M{}).All(&entities)
+func (this BaseController) FindAllEntities(collection string, entities interface{}) {
+	err := this.Storage.DB(revel.Config.StringDefault("mgo.database", "")).C(collection).Find(bson.M{}).All(entities)
 	if err != nil {
 		panic(err)
 	}
 }
 
-func (this BaseController) FindOne(collection string, criteria interface{}, entity interface {}) {
-	err := this.Storage.DB("blog").C(collection).Find(criteria).One(entity)
+func (this BaseController) FindOneEntity(collection string, criteria interface{}, entity interface{}) {
+	err := this.Storage.DB(revel.Config.StringDefault("mgo.database", "")).C(collection).Find(criteria).One(entity)
 	if err != nil {
 		panic(err)
 	}
+}
+
+func (this BaseController) UpdateEntity(collection string, criteria interface{}, entity interface{}) {
+	err := this.Storage.DB(revel.Config.StringDefault("mgo.database", "")).C(collection).Update(criteria, entity)
+	if err != nil {
+		panic(err)
+	}
+}
+
+func (this BaseController) DeleteEntity(collection string, criteria interface{}) {
+	err := this.Storage.DB(revel.Config.StringDefault("mgo.database", "")).C(collection).Remove(criteria)
+	if err != nil {
+		panic(err)
+	}
+}
+
+func (this *BaseController) CheckLoggedIn() revel.Result {
+	if id, ok := this.Session["user"]; ok {
+
+		var loggedInUser *models.User
+
+		this.FindOneEntity("users", bson.M{"_id": id}, &loggedInUser)
+
+		this.RenderArgs["loggedInUser"] = loggedInUser
+
+		return nil
+	}
+
+	delete(this.RenderArgs, "loggedInUser")
+
+	return nil
 }

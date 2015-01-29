@@ -4,8 +4,6 @@ import (
 	"github.com/revel/revel"
 	"gopkg.in/mgo.v2/bson"
 	"gogo/app/models"
-	"gogo/common/db"
-	"os"
 )
 
 type AdminRole struct {
@@ -14,20 +12,9 @@ type AdminRole struct {
 
 func (this AdminRole) List() revel.Result {
 
-	session,err := db.Connect()
-	if err != nil {
-		os.Exit(1)
-	}
-
-	defer session.Close()
-
 	var roles []models.Role
 
-	err = session.DB("blog").C("roles").Find(bson.M{}).All(&roles)
-
-	if err!=nil {
-		os.Exit(1)
-	}
+	this.FindAllEntities("roles", &roles)
 
 	this.RenderArgs["roles"] = roles
 
@@ -45,20 +32,9 @@ func (this AdminRole) Create(role *models.Role) revel.Result {
 			return this.Redirect(AdminRole.Create)
 		}
 
-		session,err := db.Connect()
-		if err != nil {
-			os.Exit(1)
-		}
-
-		defer session.Close()
-
-		err = session.DB("blog").C("roles").Insert(models.Role{
+		this.InsertEntity("roles", models.Role{
 			Id: bson.NewObjectId().Hex(),
 			Name: role.Name})
-
-		if err!=nil {
-			os.Exit(1)
-		}
 
 		return this.Redirect(AdminRole.List)
 	} 
@@ -67,13 +43,6 @@ func (this AdminRole) Create(role *models.Role) revel.Result {
 }
 
 func (this AdminRole) Update(id string) revel.Result {
-
-	session,err := db.Connect()
-	if err != nil {
-		os.Exit(1)
-	}
-
-	defer session.Close()
 
 	if this.Request.Method == "POST" {
 
@@ -89,24 +58,16 @@ func (this AdminRole) Update(id string) revel.Result {
 			return this.Redirect("/admin/role/update/"+id)
 		}		
 
-		err = session.DB("blog").C("roles").Update(bson.M{"_id": id}, bson.M{
+		this.UpdateEntity("roles", bson.M{"_id": id}, bson.M{
 			"$set": bson.M{
 				"name": role.Name}})
-
-		if err != nil {
-			os.Exit(1)
-		}
 
 		return this.Redirect(AdminRole.List)
 	} 	
 
 	var role *models.Role
 
-	err = session.DB("blog").C("roles").Find(bson.M{"_id":id}).One(&role)
-
-	if err!=nil {
-		os.Exit(1)
-	}
+	this.FindOneEntity("roles", bson.M{"_id":id}, &role)
 
 	this.RenderArgs["role"] = role
 
@@ -114,18 +75,7 @@ func (this AdminRole) Update(id string) revel.Result {
 }
 
 func (this AdminRole) Delete(id string) revel.Result {
-	session,err := db.Connect()
-	if err != nil {
-		os.Exit(1)
-	}
-
-	defer session.Close()
-
-	err = session.DB("blog").C("roles").Remove(bson.M{"_id":id})
-
-	if err!=nil {
-		os.Exit(1)
-	}
+	this.DeleteEntity("roles", bson.M{"_id":id})
 
 	return this.Redirect(AdminRole.List)
 }

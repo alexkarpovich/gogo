@@ -4,9 +4,6 @@ import (
 	"github.com/revel/revel"
 	"gopkg.in/mgo.v2/bson"
 	"gogo/app/models"
-	"gogo/common/db"
-	"fmt"
-	"os"
 	"time"
 )
 
@@ -16,22 +13,9 @@ type AdminArticle struct {
 
 func (this AdminArticle) List() revel.Result {
 
-	session,err := db.Connect()
-	if err != nil {
-		fmt.Printf("Error connection")
-		os.Exit(1)
-	}
-
-	defer session.Close()
-
 	var articles []models.Article
 
-	err = session.DB("blog").C("articles").Find(bson.M{}).All(&articles)
-
-	if err!=nil {
-		fmt.Printf("Find error")
-		os.Exit(1)
-	}
+	this.FindAllEntities("articles", &articles)
 
 	this.RenderArgs["articles"] = articles
 
@@ -49,14 +33,6 @@ func (this AdminArticle) Create(article *models.Article) revel.Result {
 			return this.Redirect(AdminArticle.Create)
 		}
 
-		session,err := db.Connect()
-		if err != nil {
-			fmt.Printf("Error connection")
-			os.Exit(1)
-		}
-
-		defer session.Close()
-
 		user, ok := this.RenderArgs["loggedInUser"]
 		
 		if !ok {
@@ -65,18 +41,13 @@ func (this AdminArticle) Create(article *models.Article) revel.Result {
 
 		author := user.(*models.User)
 
-		err = session.DB("blog").C("articles").Insert(models.Article{
+		this.InsertEntity("articles", models.Article{
 			Id: bson.NewObjectId().Hex(),
 			Title: article.Title,
 			Content: article.Content,
 			Author: author.FirstName + " " + author.LastName,
 			Created: time.Now(),
 			Updated: time.Now()})
-
-		if err!=nil {
-			fmt.Printf("Find error")
-			os.Exit(1)
-		}
 
 		return this.Redirect(AdminArticle.List)
 	} 
@@ -85,14 +56,6 @@ func (this AdminArticle) Create(article *models.Article) revel.Result {
 }
 
 func (this AdminArticle) Update(id string) revel.Result {
-
-	session,err := db.Connect()
-	if err != nil {
-		fmt.Printf("Error connection")
-		os.Exit(1)
-	}
-
-	defer session.Close()
 
 	if this.Request.Method == "POST" {
 
@@ -108,27 +71,18 @@ func (this AdminArticle) Update(id string) revel.Result {
 			return this.Redirect("/Article/Update/"+id)
 		}		
 
-		err = session.DB("blog").C("articles").Update(bson.M{"_id": id}, bson.M{
+		this.UpdateEntity("article", bson.M{"_id": id}, bson.M{
 			"$set": bson.M{
 				"title": article.Title,
 				"content": article.Content,
 				"updated": time.Now()}})
-
-		if err != nil {
-			os.Exit(1)
-		}
 
 		return this.Redirect(AdminArticle.List)
 	} 	
 
 	var article *models.Article
 
-	err = session.DB("blog").C("articles").Find(bson.M{"_id":id}).One(&article)
-
-	if err!=nil {
-		fmt.Printf("Find error")
-		os.Exit(1)
-	}
+	this.FindOneEntity("articles", bson.M{"_id":id}, &article)
 
 	this.RenderArgs["article"] = article
 
@@ -136,20 +90,7 @@ func (this AdminArticle) Update(id string) revel.Result {
 }
 
 func (this AdminArticle) Delete(id string) revel.Result {
-	session,err := db.Connect()
-	if err != nil {
-		fmt.Printf("Error connection")
-		os.Exit(1)
-	}
-
-	defer session.Close()
-
-	err = session.DB("blog").C("articles").Remove(bson.M{"_id":id})
-
-	if err!=nil {
-		fmt.Printf("Delete error")
-		os.Exit(1)
-	}
+	this.DeleteEntity("articles", bson.M{"_id":id})
 
 	return this.Redirect(AdminArticle.List)
 }
