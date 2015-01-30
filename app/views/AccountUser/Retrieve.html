@@ -1,0 +1,32 @@
+{{set . "title" "Retrieve"}}
+{{template "header.html" .}}
+
+<div class="col-sm-6 col-sm-offset-3">
+	
+	<div class="panel panel-default">		
+		<div class="panel-heading">
+			<h3 class="centred">User info</h3>			
+		</div>
+		<div class="panel-body">
+				<table colspacing="10" class="table">
+					<tr>
+						<td><strong>Email</strong></td><td>{{.user.Email}}</td>						
+					</tr>
+					<tr>
+						<td><strong>First name</strong></td><td>{{.user.FirstName}}</td>						
+					</tr>
+					<tr>
+						<td><strong>Last name</strong></td><td>{{.user.LastName}}</td>						
+					</tr>
+					<tr>
+						<td><strong>Role</strong></td><td>{{.user.Role.Name}}</td>						
+					</tr>
+					<tr>
+						<td><strong>Joined</strong></td><td>{{.user.Joined}}</td>						
+					</tr>
+				</table>
+			</div>
+	</div>
+</div>
+
+{{template "footer.html" .}}

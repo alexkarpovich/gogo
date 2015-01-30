@@ -10,7 +10,7 @@ type Article struct {
 	Id 		string `bson:"_id"`
 	Title	string `bson:"title"`
 	Content string `bson:"content"`
-	Author 	string `bson:"author"`
+	Author 	User `bson:"author"`
 	Created time.Time `bson:"created"`
 	Updated time.Time `bson:"updated"`
 }

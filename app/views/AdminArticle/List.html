@@ -12,7 +12,7 @@
 			{{range .articles}}
 			<div class="panel panel-info">
 				<div class="panel-heading">
-				<h4 class="nomargin">{{.Title}} - <small>Author: {{.Author}}, Created: {{.Created}}</small>
+				<h4 class="nomargin">{{.Title}} - <small>Author: <a href="/account/user/retrieve/{{.Author.Id}}">{{.Author.FirstName}} {{.Author.LastName}}</a>, Created: {{.Created}}</small>
 				<a href="/admin/article/update/{{.Id}}" class="btn btn-warning btn-sm">Edit</a>
 				<a href="/admin/article/delete/{{.Id}}" class="btn btn-warning btn-sm">Delete</a>
 				</h4>

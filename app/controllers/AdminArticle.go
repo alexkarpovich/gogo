@@ -45,7 +45,7 @@ func (this AdminArticle) Create(article *models.Article) revel.Result {
 			Id: bson.NewObjectId().Hex(),
 			Title: article.Title,
 			Content: article.Content,
-			Author: author.FirstName + " " + author.LastName,
+			Author: *author,
 			Created: time.Now(),
 			Updated: time.Now()})
 

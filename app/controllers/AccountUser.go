@@ -102,3 +102,13 @@ func (this AccountUser) Profile() revel.Result {
 
 	return this.Render()
 }
+
+func (this AccountUser) Retrieve(id string) revel.Result{
+	var user *models.User
+
+	this.FindOneEntity("users", bson.M{"_id":id}, &user)
+
+	this.RenderArgs["user"] = user
+
+	return this.Render()
+}
