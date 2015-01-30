@@ -15,7 +15,7 @@ type AdminUser struct {
 func (this AdminUser) List() revel.Result {
 	var users []models.User
 
-	this.FindAllEntities("users", &users)	
+	this._FindAll("users", &users)	
 
 	this.RenderArgs["users"] = users
 
@@ -42,9 +42,9 @@ func (this AdminUser) Create(user *models.User) revel.Result {
 
 		var role models.Role
 
-		this.FindOneEntity("roles", bson.M{"_id":this.Params.Get("role")}, &role)
+		this._FindOne("roles", bson.M{"_id":this.Params.Get("role")}, &role)
 
-		this.InsertEntity("users", models.User{
+		this._Insert("users", models.User{
 			Id: bson.NewObjectId().Hex(),
 			Email: user.Email,
 			FirstName: user.FirstName,
@@ -59,7 +59,7 @@ func (this AdminUser) Create(user *models.User) revel.Result {
 
 	var roles []models.Role
 
-	this.FindAllEntities("roles", &roles)
+	this._FindAll("roles", &roles)
 
 	this.RenderArgs["roles"] = roles
 
@@ -84,8 +84,8 @@ func (this AdminUser) Update(id string) revel.Result {
 
 		var role *models.Role	
 
-		this.FindOneEntity("roles", bson.M{"_id":this.Params.Get("role")}, &role)
-		this.UpdateEntity("users", bson.M{"_id": id}, bson.M{
+		this._FindOne("roles", bson.M{"_id":this.Params.Get("role")}, &role)
+		this._Update("users", bson.M{"_id": id}, bson.M{
 			"$set": bson.M{
 				"email": user.Email,
 				"firstName": user.FirstName,
@@ -99,9 +99,9 @@ func (this AdminUser) Update(id string) revel.Result {
 	var user *models.User
 	var roles []*models.Role
 
-	this.FindOneEntity("users", bson.M{"_id":id}, &user)
+	this._FindOne("users", bson.M{"_id":id}, &user)
 	
-	this.FindAllEntities("roles", &roles)
+	this._FindAll("roles", &roles)
 
 	this.RenderArgs["user"] = user
 	this.RenderArgs["roles"] = roles
@@ -110,7 +110,7 @@ func (this AdminUser) Update(id string) revel.Result {
 }
 
 func (this AdminUser) Delete(id string) revel.Result {
-	this.DeleteEntity("users", bson.M{"_id":id})
+	this._Delete("users", bson.M{"_id":id})
 
 	return this.Redirect(AdminUser.List)
 }

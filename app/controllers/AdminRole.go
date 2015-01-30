@@ -14,7 +14,7 @@ func (this AdminRole) List() revel.Result {
 
 	var roles []models.Role
 
-	this.FindAllEntities("roles", &roles)
+	this._FindAll("roles", &roles)
 
 	this.RenderArgs["roles"] = roles
 
@@ -32,7 +32,7 @@ func (this AdminRole) Create(role *models.Role) revel.Result {
 			return this.Redirect(AdminRole.Create)
 		}
 
-		this.InsertEntity("roles", models.Role{
+		this._Insert("roles", models.Role{
 			Id: bson.NewObjectId().Hex(),
 			Name: role.Name})
 
@@ -58,7 +58,7 @@ func (this AdminRole) Update(id string) revel.Result {
 			return this.Redirect("/admin/role/update/"+id)
 		}		
 
-		this.UpdateEntity("roles", bson.M{"_id": id}, bson.M{
+		this._Update("roles", bson.M{"_id": id}, bson.M{
 			"$set": bson.M{
 				"name": role.Name}})
 
@@ -67,7 +67,7 @@ func (this AdminRole) Update(id string) revel.Result {
 
 	var role *models.Role
 
-	this.FindOneEntity("roles", bson.M{"_id":id}, &role)
+	this._FindOne("roles", bson.M{"_id":id}, &role)
 
 	this.RenderArgs["role"] = role
 
@@ -75,7 +75,7 @@ func (this AdminRole) Update(id string) revel.Result {
 }
 
 func (this AdminRole) Delete(id string) revel.Result {
-	this.DeleteEntity("roles", bson.M{"_id":id})
+	this._Delete("roles", bson.M{"_id":id})
 
 	return this.Redirect(AdminRole.List)
 }

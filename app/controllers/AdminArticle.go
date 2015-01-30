@@ -15,7 +15,7 @@ func (this AdminArticle) List() revel.Result {
 
 	var articles []models.Article
 
-	this.FindAllEntities("articles", &articles)
+	this._FindAll("articles", &articles)
 
 	this.RenderArgs["articles"] = articles
 
@@ -41,7 +41,7 @@ func (this AdminArticle) Create(article *models.Article) revel.Result {
 
 		author := user.(*models.User)
 
-		this.InsertEntity("articles", models.Article{
+		this._Insert("articles", models.Article{
 			Id: bson.NewObjectId().Hex(),
 			Title: article.Title,
 			Content: article.Content,
@@ -71,7 +71,7 @@ func (this AdminArticle) Update(id string) revel.Result {
 			return this.Redirect("/Article/Update/"+id)
 		}		
 
-		this.UpdateEntity("article", bson.M{"_id": id}, bson.M{
+		this._Update("article", bson.M{"_id": id}, bson.M{
 			"$set": bson.M{
 				"title": article.Title,
 				"content": article.Content,
@@ -82,7 +82,7 @@ func (this AdminArticle) Update(id string) revel.Result {
 
 	var article *models.Article
 
-	this.FindOneEntity("articles", bson.M{"_id":id}, &article)
+	this._FindOne("articles", bson.M{"_id":id}, &article)
 
 	this.RenderArgs["article"] = article
 
@@ -90,7 +90,7 @@ func (this AdminArticle) Update(id string) revel.Result {
 }
 
 func (this AdminArticle) Delete(id string) revel.Result {
-	this.DeleteEntity("articles", bson.M{"_id":id})
+	this._Delete("articles", bson.M{"_id":id})
 
 	return this.Redirect(AdminArticle.List)
 }

@@ -35,9 +35,9 @@ func (this AccountUser) Signup() revel.Result {
 
 		var role models.Role
 
-		this.FindOneEntity("roles", bson.M{"name":"Employee"}, &role)
+		this._FindOne("roles", bson.M{"name":"Employee"}, &role)
 
-		this.InsertEntity("users", models.User{
+		this._Insert("users", models.User{
 			Id: bson.NewObjectId().Hex(),
 			Email: user.Email,
 			FirstName: user.FirstName,
@@ -73,7 +73,7 @@ func (this AccountUser) Login() revel.Result {
 
 		cryptedPassword := md5.Sum([]byte(user.Password))
 
-		this.FindOneEntity("users", bson.M{"email":user.Email, "password":string(cryptedPassword[:])}, &loggedInUser)
+		this._FindOne("users", bson.M{"email":user.Email, "password":string(cryptedPassword[:])}, &loggedInUser)
 
 		this.Session = make(revel.Session)
 
@@ -106,7 +106,7 @@ func (this AccountUser) Profile() revel.Result {
 func (this AccountUser) Retrieve(id string) revel.Result{
 	var user *models.User
 
-	this.FindOneEntity("users", bson.M{"_id":id}, &user)
+	this._FindOne("users", bson.M{"_id":id}, &user)
 
 	this.RenderArgs["user"] = user
 
