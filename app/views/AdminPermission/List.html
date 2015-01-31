@@ -1,0 +1,42 @@
+{{set . "title" "Permission list"}}
+{{template "header.html" .}}
+
+<div class="col-sm-12">
+	<h3 class="centred">Permission list</h3>
+	<div class="panel panel-default">		
+		<div class="panel-heading">
+			<a href="/admin/permission/create" class="btn btn-primary btn-sm">Create new permission</a>
+		</div>
+		<div class="panel-body">
+			{{if .permissions}}
+			<table class="table">
+				<thead>
+					<th>Id</th>
+					<th>Resource</th>
+					<th>Roles</th>
+					<th>Actions</th>
+				</thead>
+				<tbody>
+				{{range .permissions}}
+					<tr>
+						<td>{{.Id}}</td>
+						<td>{{.Resource.Controller}}:{{.Resource.Action}}</td>
+						<td>
+							{{range .Roles}}{{.Name}};{{end}}
+						</td>
+						<td>
+							<a href="/admin/permission/update/{{.Id}}" class="btn btn-warning btn-sm">Edit</a>
+							<a href="/admin/permission/delete/{{.Id}}" class="btn btn-danger btn-sm">Delete</a>
+						</td>
+					</tr>
+				{{end}}
+				</tbody>
+			</table>
+			{{else}}
+			<div class="info">Have no permissions yet</div>
+			{{end}}
+		</div>
+	</div>
+</div>
+
+{{template "footer.html" .}}

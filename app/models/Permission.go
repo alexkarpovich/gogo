@@ -5,12 +5,12 @@ import (
 )
 
 type Permission struct {
-	Id 			string 	`bson: "_id"`
-	Contoller 	string	`bson: "controller"`
-	Action 		string 	`bson: "action"` 
+	Id       string   `bson:"_id"`
+	Resource Resource `bson:"resource"`
+	Roles    []Role   `bson:"roles"`
 }
 
 func (this Permission) Validate(v *revel.Validation) {
-	v.Required(this.Contoller)
-	v.Required(this.Action)
+	v.Required(this.Resource)
+	v.Required(this.Roles)
 }

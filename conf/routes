@@ -1,19 +1,21 @@
 module:testrunner
 
-GET		/							App.Index
+GET		/								App.Index
 
-GET     /favicon.ico				404
+GET     /favicon.ico					404
 
-GET     /public/*filepath   		Static.Serve("public")
+GET     /public/*filepath   			Static.Serve("public")
 
-*		/admin/article/:action		AdminArticle.:action
-*		/admin/article/:action/:id	AdminArticle.:action
-* 		/admin/user/:action			AdminUser.:action
-* 		/admin/user/:action/:id		AdminUser.:action
-* 		/admin/role/:action			AdminRole.:action
-* 		/admin/role/:action/:id		AdminRole.:action
+*		/admin/article/:action			AdminArticle.:action
+*		/admin/article/:action/:id		AdminArticle.:action
+* 		/admin/user/:action				AdminUser.:action
+* 		/admin/user/:action/:id			AdminUser.:action
+* 		/admin/role/:action				AdminRole.:action
+* 		/admin/role/:action/:id			AdminRole.:action
+* 		/admin/permission/:action		AdminPermission.:action
+* 		/admin/permission/:action/:id	AdminPermission.:action
 
-*		/account/user/:action		AccountUser.:action
-*		/account/user/:action/:id   AccountUser.:action
+*		/account/user/:action			AccountUser.:action
+*		/account/user/:action/:id   	AccountUser.:action
 
-*       /:controller/:action		:controller.:action
+*       /:controller/:action			:controller.:action

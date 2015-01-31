@@ -13,14 +13,7 @@ type BaseController struct {
 }
 
 func (this *BaseController) Startup() revel.Result {
-	HOST := revel.Config.StringDefault("mgo.host", "")
-
-	connection, err := mgo.Dial("mongodb://" + HOST)
-	if err != nil {
-		panic(err)
-	}
-
-	this.Storage = connection
+	this.Storage = Connect()
 
 	return nil
 }
@@ -33,39 +26,29 @@ func (this *BaseController) Shutdown() revel.Result {
 	return nil
 }
 
-func (this BaseController) _Insert(collection string, entity interface{}) {
+func (this BaseController) _Insert(collection string, entity interface{}) error {
 	err := this.Storage.DB(revel.Config.StringDefault("mgo.database", "")).C(collection).Insert(entity)
-	if err != nil {
-		panic(err)
-	}
+	return err
 }
 
-func (this BaseController) _FindAll(collection string, entities interface{}) {
+func (this BaseController) _FindAll(collection string, entities interface{}) error {
 	err := this.Storage.DB(revel.Config.StringDefault("mgo.database", "")).C(collection).Find(bson.M{}).All(entities)
-	if err != nil {
-		panic(err)
-	}
+	return err
 }
 
-func (this BaseController) _FindOne(collection string, criterion interface{}, entity interface{}) {
+func (this BaseController) _FindOne(collection string, criterion interface{}, entity interface{}) error {
 	err := this.Storage.DB(revel.Config.StringDefault("mgo.database", "")).C(collection).Find(criterion).One(entity)
-	if err != nil {
-		panic(err)
-	}
+	return err
 }
 
-func (this BaseController) _Update(collection string, criterion interface{}, entity interface{}) {
+func (this BaseController) _Update(collection string, criterion interface{}, entity interface{}) error {
 	err := this.Storage.DB(revel.Config.StringDefault("mgo.database", "")).C(collection).Update(criterion, entity)
-	if err != nil {
-		panic(err)
-	}
+	return err
 }
 
-func (this BaseController) _Delete(collection string, criterion interface{}) {
+func (this BaseController) _Delete(collection string, criterion interface{}) error {
 	err := this.Storage.DB(revel.Config.StringDefault("mgo.database", "")).C(collection).Remove(criterion)
-	if err != nil {
-		panic(err)
-	}
+	return err
 }
 
 func (this *BaseController) CheckLoggedIn() revel.Result {
@@ -85,26 +68,24 @@ func (this *BaseController) CheckLoggedIn() revel.Result {
 	return nil
 }
 
-func (this *BaseController) CheckAccess() revel.Result {
-	permissions := models.GetPermissions()
+func (this *BaseController) CheckPermissions() revel.Result {
+	var currentUserRole string = "Guest"
 	if user, ok := this.RenderArgs["loggedInUser"]; ok {
-		if actions, ok := permissions[user.(*models.User).Role.Name][this.Name]; ok {
-			for _, action := range actions {
-		        if action == this.MethodName {
-		            return nil
-		        }
-		    }
-		}
-		return this.Redirect("/")
-	} 
+		currentUserRole = user.(*models.User).Role.Name
+	}
 
-	if actions, ok := permissions["Guest"][this.Name]; ok {
-			for _, action := range actions {
-		        if action == this.MethodName {
-		            return nil
-		        }
-		    }
-		}
-	
-	return this.Redirect("/")	
+	var permission models.Permission
+
+	err := this._FindOne("permissions", bson.M{
+		"resource": bson.M{
+			"controller": this.Name,
+			"action":     this.MethodName},
+		"roles": bson.M{
+			"$elemMatch": bson.M{
+				"name": currentUserRole}}}, &permission)
+	if err != nil {
+		this.Storage.Close()
+		return this.Redirect("/")
+	}
+	return nil
 }

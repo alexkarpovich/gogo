@@ -1,0 +1,21 @@
+{{set . "title" "Create new Permission"}}
+{{template "header.html" .}}
+
+<div class="col-sm-6 col-sm-offset-3">
+	
+	<div class="panel panel-default">		
+		<div class="panel-heading">
+			<h3 class="centred">Create new Permission</h3>
+		</div>
+		<form name="create_permission" method="post" action="/admin/permission/create">
+		<div class="panel-body">	
+						
+		</div>
+		<div class="panel-footer">
+			<input type="submit" class="btn btn-primary btn-sm btn-block" value="Create">			
+		</div>
+		</form>
+	</div>
+</div>
+
+{{template "footer.html" .}}
