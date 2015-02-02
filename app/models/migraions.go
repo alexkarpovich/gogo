@@ -3,8 +3,11 @@ package models
 type PermissionsMap map[string]map[string][]string
 type PermissionItem map[string][]string
 
-func Migrations() ([]string, PermissionsMap) {
+func Migrations() ([]string, PermissionsMap, [][]string) {
 	Roles := []string{"Admin", "Employee", "Guest"}
+
+	Users := [][]string{
+		{"admin@admin.com","Admin","Admin","admin","Admin"}}
 
 	Permissions := PermissionsMap{
 		"App": PermissionItem{
@@ -35,5 +38,5 @@ func Migrations() ([]string, PermissionsMap) {
 			"Create": []string{"Admin"},
 			"Update": []string{"Admin"},
 			"Delete": []string{"Admin"}}}
-	return Roles, Permissions
+	return Roles, Permissions, Users
 }

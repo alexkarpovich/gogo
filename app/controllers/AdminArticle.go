@@ -68,10 +68,10 @@ func (this AdminArticle) Update(id string) revel.Result {
 		if this.Validation.HasErrors() {
 			this.Validation.Keep()
 			this.FlashParams()
-			return this.Redirect("/Article/Update/"+id)
+			return this.Redirect("/admin/article/update/"+id)
 		}		
 
-		this._Update("article", bson.M{"_id": id}, bson.M{
+		this._Update("articles", bson.M{"_id": id}, bson.M{
 			"$set": bson.M{
 				"title": article.Title,
 				"content": article.Content,

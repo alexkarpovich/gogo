@@ -20,9 +20,9 @@
 				{{range .permissions}}
 					<tr>
 						<td>{{.Id}}</td>
-						<td>{{.Resource.Controller}}:{{.Resource.Action}}</td>
+						<td><strong>{{.Resource.Controller}}</strong><red>:</red>{{.Resource.Action}}</td>
 						<td>
-							{{range .Roles}}{{.Name}};{{end}}
+							{{range .Roles}}{{.Name}}; {{end}}
 						</td>
 						<td>
 							<a href="/admin/permission/update/{{.Id}}" class="btn btn-warning btn-sm">Edit</a>

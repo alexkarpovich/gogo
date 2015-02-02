@@ -4,7 +4,7 @@ web:
     - .:/goprojects/src/gogo
   ports:
     - "9000:9000"
-  command: revel run gogo dev
+  command: revel run gogo
   links:
     - db
 db:

@@ -51,7 +51,7 @@ func (this BaseController) _Delete(collection string, criterion interface{}) err
 	return err
 }
 
-func (this *BaseController) CheckLoggedIn() revel.Result {
+func (this *BaseController) СheckLoggedIn() revel.Result {
 	if id, ok := this.Session["user"]; ok {
 
 		var loggedInUser *models.User
@@ -68,7 +68,7 @@ func (this *BaseController) CheckLoggedIn() revel.Result {
 	return nil
 }
 
-func (this *BaseController) CheckPermissions() revel.Result {
+func (this *BaseController) СheckPermissions() revel.Result {
 	var currentUserRole string = "Guest"
 	if user, ok := this.RenderArgs["loggedInUser"]; ok {
 		currentUserRole = user.(*models.User).Role.Name

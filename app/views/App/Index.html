@@ -1,21 +1,15 @@
 {{set . "title" "Home"}}
 {{template "header.html" .}}
 
-<header class="header">
-  Header gogo 
-</header>
-<div class="content">  
-  <h2> Here will be content</h2>
-</div>
-
-<footer class="footer">
-  <h4>Here is footer</h4>
-</footer>
-
-<div class="container">
-  <div class="row">
-    <div class="span6">
-      {{template "flash.html" .}}
+<div class="main">
+  <div class="col-md-9">
+    <div class="panel panel-default">
+      <div class="panel-heading">Super mega title</div>
+    </div>
+  </div>
+  <div class="col-md-3">
+    <div class="panel panel-default">
+      Param param pam
     </div>
   </div>
 </div>

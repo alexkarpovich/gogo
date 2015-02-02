@@ -5,13 +5,15 @@ import (
 	"gogo/app/models"
 	"gopkg.in/mgo.v2"
 	"gopkg.in/mgo.v2/bson"
+	"crypto/md5"
+	"time"
 )
 
 func init() {
-	revel.OnAppStart(Migrate)
+	//revel.OnAppStart(Migrate)
 	revel.InterceptMethod((*BaseController).Startup, revel.BEFORE)
-	revel.InterceptMethod((*BaseController).CheckLoggedIn, revel.BEFORE)
-	revel.InterceptMethod((*BaseController).CheckPermissions, revel.BEFORE)
+	revel.InterceptMethod((*BaseController).СheckLoggedIn, revel.BEFORE)
+	revel.InterceptMethod((*BaseController).СheckPermissions, revel.BEFORE)
 	revel.InterceptMethod((*BaseController).Shutdown, revel.AFTER)
 }
 
@@ -29,11 +31,34 @@ func Migrate() {
 	connection := Connect()
 	defer connection.Close()
 
-	roles, permissions := models.Migrations()
+	roles, permissions, users := models.Migrations()
 	for i := range roles {
 		err := connection.DB(revel.Config.StringDefault("mgo.database", "")).C("roles").Insert(models.Role{
 			Id:   bson.NewObjectId().Hex(),
 			Name: roles[i]})
+		if err != nil {
+			panic(err)
+		}
+	}
+
+	for i := range users {
+		var role models.Role
+		err := connection.DB(revel.Config.StringDefault("mgo.database", "")).C("roles").Find(bson.M{"name":users[i][4]}).One(&role)
+		if err != nil {
+			panic(err)
+		}
+
+		cryptedPassword := md5.Sum([]byte(users[i][3]))
+
+		err = connection.DB(revel.Config.StringDefault("mgo.database", "")).C("users").Insert(models.User{
+			Id:   bson.NewObjectId().Hex(),
+			Email: users[i][0],
+			FirstName: users[i][1],
+			LastName: users[i][2],
+			Password: string(cryptedPassword[:]),
+			Role: role,
+			Joined: time.Now(),
+			Updated: time.Now()})
 		if err != nil {
 			panic(err)
 		}
