@@ -15,6 +15,27 @@
     {{range .moreScripts}}
       <script src="/public/{{.}}" type="text/javascript"></script>
     {{end}}
+    <script type="text/javascript">
+      $(document).ready(function(){
+        $sidebar = 0;
+        $('#toggleSidebar').click(function() {
+          if ($sidebar === 1) {
+            $('#sidebar').hide();
+            $('#toggleSidebar i').addClass('icon-chevron-left');
+            $('#toggleSidebar i').removeClass('icon-chevron-right');
+            $sidebar = 0;
+          }
+          else {
+            $('#sidebar').show();
+            $('#toggleSidebar i').addClass('icon-chevron-right');
+            $('#toggleSidebar i').removeClass('icon-chevron-left');
+            $sidebar = 1;
+          }
+
+          return false;
+        });
+      });
+    </script>
   </head>
   <body>
 {{template "menu.html" .}}

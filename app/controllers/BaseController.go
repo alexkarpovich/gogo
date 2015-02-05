@@ -84,6 +84,7 @@ func (this *BaseController) СheckPermissions() revel.Result {
 			"$elemMatch": bson.M{
 				"name": currentUserRole}}}, &permission)
 	if err != nil {
+		revel.TRACE.Printf("Super mega %v", permission.Id)
 		this.Storage.Close()
 		return this.Redirect("/")
 	}

@@ -14,15 +14,11 @@ module.exports = function (basePath, min) {
     }
 
     var scripts = [        
-        basePath + '/jquery/dist/jquery' + target + '.js',  
-        basePath + '/bootstrap/dist/js/bootstrap' + target + '.js',      
-        basePath + '/underscore/underscore.js',
-        basePath + '/lodash/dist/lodash' + target + '.js',
-        basePath + '/backbone/backbone.js',
-        basePath + '/backbone.babysitter/lib/backbone.babysitter' + target + '.js',
-        basePath + '/backbone.wreqr/lib/backbone.wreqr' + target + '.js',
-        basePath + '/bootstrap/dist/bootstrap' + target + '.js',
-        basePath + '/alertify.js/lib/alertify' + target + '.js'
+        basePath + '/jquery/dist/jquery' + target + '.js',     
+        //basePath + '/lodash/dist/lodash' + target + '.js',
+        //basePath + '/bootstrap/dist/js/bootstrap' + target + '.js',
+        //basePath + '/alertify.js/lib/alertify' + target + '.js',
+        //basePath + '/socket.io-client/socket.io.js'
     ];
 
     return scripts;
