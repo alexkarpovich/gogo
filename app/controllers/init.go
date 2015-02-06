@@ -1,11 +1,11 @@
 package controllers
 
 import (
+	"crypto/md5"
 	"github.com/revel/revel"
 	"gogo/app/models"
 	"gopkg.in/mgo.v2"
 	"gopkg.in/mgo.v2/bson"
-	"crypto/md5"
 	"time"
 )
 
@@ -43,7 +43,7 @@ func Migrate() {
 
 	for i := range users {
 		var role models.Role
-		err := connection.DB(revel.Config.StringDefault("mgo.database", "")).C("roles").Find(bson.M{"name":users[i][4]}).One(&role)
+		err := connection.DB(revel.Config.StringDefault("mgo.database", "")).C("roles").Find(bson.M{"name": users[i][4]}).One(&role)
 		if err != nil {
 			panic(err)
 		}
@@ -51,14 +51,14 @@ func Migrate() {
 		cryptedPassword := md5.Sum([]byte(users[i][3]))
 
 		err = connection.DB(revel.Config.StringDefault("mgo.database", "")).C("users").Insert(models.User{
-			Id:   bson.NewObjectId().Hex(),
-			Email: users[i][0],
+			Id:        bson.NewObjectId().Hex(),
+			Email:     users[i][0],
 			FirstName: users[i][1],
-			LastName: users[i][2],
-			Password: string(cryptedPassword[:]),
-			Role: role,
-			Joined: time.Now(),
-			Updated: time.Now()})
+			LastName:  users[i][2],
+			Password:  string(cryptedPassword[:]),
+			Role:      role,
+			Joined:    time.Now(),
+			Updated:   time.Now()})
 		if err != nil {
 			panic(err)
 		}
