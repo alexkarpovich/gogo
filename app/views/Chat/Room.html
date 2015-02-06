@@ -1,9 +1,10 @@
 {{set . "title" "Chat room"}}
 {{template "header.html" .}}
 
-<h3 class="centered">Chat room</h3>
 <div class="chat">
-<dl id="thread" class="dl-horizontal col-sm-8 col-sm-offset-2"></dl>
+<div class="dialog col-sm-offset-2 col-sm-8">
+  <dl id="thread" class="dl-horizontal"></dl>
+</div>
 <div class="message-box">
   <div class="col-md-8 col-md-offset-2">
     <textarea id="message" class="form-control" autofocus></textarea>
@@ -15,12 +16,12 @@
 
 <script type="text/javascript">
   // Create a socket
-  var socket = new WebSocket('ws://'+window.location.host+'/WebSocket/RoomSocket')
+  var socket = new WebSocket('ws://'+window.location.host+'/Chat/RoomSocket')
   // Display a message
   var display = function(event) {
     var height=$("#thread").height(); 
+    $('#thread').append("<dt>"+event.User+"</dt><dd>"+event.Text.split('\n').join('<br/>')+"</dd>");
     $('html, body').animate({scrollTop:height}, 'fast');
-    $('#thread').append("<dt>"+event.User+"</dt><dd>"+event.Text+"</dd>");
   }
   // Message received on the socket
   socket.onmessage = function(event) {
@@ -32,7 +33,7 @@
     socket.send(message)
   });
   $('#message').keypress(function(e) {
-    if(e.charCode == 13 || e.keyCode == 13) {
+    if((e.keyCode == 10 || e.keyCode == 13) && e.ctrlKey) {
       $('#send').click()
       e.preventDefault()
     }

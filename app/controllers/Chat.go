@@ -7,15 +7,15 @@ import (
 	"gogo/app/models"
 )
 
-type WebSocket struct {
+type Chat struct {
 	BaseController
 }
 
-func (this WebSocket) Room() revel.Result {
+func (this Chat) Room() revel.Result {
 	return this.Render()
 }
 
-func (this WebSocket) RoomSocket(ws *websocket.Conn) revel.Result {
+func (this Chat) RoomSocket(ws *websocket.Conn) revel.Result {
 	subscription := chat.Subscribe()
 	defer subscription.Cancel()
 
