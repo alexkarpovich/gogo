@@ -4,22 +4,25 @@ import (
 	"code.google.com/p/go.net/websocket"
 	"github.com/revel/revel"
 	"gogo/app/chat"
+	"gogo/app/models"
 )
 
 type WebSocket struct {
 	BaseController
 }
 
-func (this WebSocket) Room(user string) revel.Result {
-	return this.Render(user)
+func (this WebSocket) Room() revel.Result {
+	return this.Render()
 }
 
-func (this WebSocket) RoomSocket(user string, ws *websocket.Conn) revel.Result {
+func (this WebSocket) RoomSocket(ws *websocket.Conn) revel.Result {
 	subscription := chat.Subscribe()
 	defer subscription.Cancel()
 
-	chat.Join(user)
-	defer chat.Leave(user)
+	user := this.RenderArgs["loggedInUser"].(*models.User)
+
+	chat.Join(user.FirstName + " " + user.LastName)
+	defer chat.Leave(user.FirstName + " " + user.LastName)
 
 	for _, event := range subscription.Archive {
 		if websocket.JSON.Send(ws, &event) != nil {
@@ -51,8 +54,8 @@ func (this WebSocket) RoomSocket(user string, ws *websocket.Conn) revel.Result {
 			if !ok {
 				return nil
 			}
-			chat.Say(user, msg)
-		}		
+			chat.Say(user.FirstName+" "+user.LastName, msg)
+		}
 	}
 	return nil
 }

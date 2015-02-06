@@ -8,27 +8,6 @@ type App struct {
 	BaseController
 }
 
-func (c App) Index() revel.Result {	
+func (c App) Index() revel.Result {
 	return c.Render()
 }
-
-func (c App) EnterDemo(user, demo string) revel.Result {
-  c.Validation.Required(user)
-  c.Validation.Required(demo)
-
-  if c.Validation.HasErrors() {
-    c.Flash.Error("Please choose a nick name and the demonstration type.")
-    return c.Redirect(App.Index)
-  }
-
-  switch demo {
-  case "refresh":
-    return c.Redirect("/refresh?user=%s", user)
-  case "longpolling":
-    return c.Redirect("/longpolling/room?user=%s", user)
-  case "websocket":
-    return c.Redirect("/websocket/room?user=%s", user)
-  }
-  return nil
-}
-
