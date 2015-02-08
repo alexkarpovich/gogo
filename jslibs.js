@@ -18,7 +18,7 @@ module.exports = function (basePath, min) {
         //basePath + '/lodash/dist/lodash' + target + '.js',
         //basePath + '/bootstrap/dist/js/bootstrap' + target + '.js',
         //basePath + '/alertify.js/lib/alertify' + target + '.js',
-        //basePath + '/socket.io-client/socket.io.js'
+        basePath + '/socket.io-client/socket.io.js'
     ];
 
     return scripts;

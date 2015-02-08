@@ -1,0 +1,138 @@
+{{set . "title" "Home"}}
+{{template "header.html" .}}
+
+<script type="text/javascript">
+  $(document).ready(function() {
+    var PeerConnection = window.mozRTCPeerConnection || window.webkitRTCPeerConnection;
+    var IceCandidate = window.mozRTCIceCandidate || window.RTCIceCandidate;
+    var SessionDescription = window.mozRTCSessionDescription || window.RTCSessionDescription;
+    navigator.getUserMedia = navigator.getUserMedia || navigator.mozGetUserMedia || navigator.webkitGetUserMedia;
+    var selfStream = null;
+    var pc = null;
+    function openStream() {
+      navigator.getUserMedia({ audio: true, video: true }, gotStream, streamError);
+
+      function gotStream(stream) {
+          selfStream = stream;
+          document.querySelector('video').src = URL.createObjectURL(stream);
+          pc = new PeerConnection(null);
+          pc.addStream(stream);
+          pc.onicecandidate = gotIceCandidate;
+          pc.onaddstream = gotRemoteStream;
+      }
+
+      function streamError(error) {
+         console.log(error);
+      }  
+    }  
+
+    function gotIceCandidate(event) {
+        if (event.candidate) {
+          socket.send(JSON.stringify({
+            type: 'candidate',
+            label: event.candidate.sdpMLineIndex,
+            id: event.candidate.sdpMid,
+            candidate: event.candidate.candidate
+          }));
+        }
+      }    
+
+    function gotRemoteStream(event){
+      document.getElementById("remote-stream").src = URL.createObjectURL(event.stream);
+    }
+
+    function gotLocalDescription(description){
+      console.log('gotLocalDescription: '+JSON.stringify(description));
+      pc.setLocalDescription(description);
+      socket.send(JSON.stringify(description));
+    }
+
+    function createOffer() {
+      pc.createOffer(
+        gotLocalDescription, 
+        function(error) { console.log(error) }, 
+        { 'mandatory': { 'OfferToReceiveAudio': true, 'OfferToReceiveVideo': true } }
+      );
+    }
+    function createAnswer() {
+      console.log('createAnswer');
+      pc.createAnswer(
+        gotLocalDescription,
+        function(error) { console.log(error) }, 
+        { 'mandatory': { 'OfferToReceiveAudio': true, 'OfferToReceiveVideo': true } }
+      );
+    }
+
+    var socket = new WebSocket('ws://'+window.location.host+'/VideoChat/IndexSocket');
+
+    socket.onmessage = function(event) {
+      var message = JSON.parse(event.data);
+      message = message.Text!=""?JSON.parse(message.Text):message;
+      if (message.type == "offer") {
+        console.log('Socket offer: '+JSON.stringify(message));
+        pc.setRemoteDescription(new SessionDescription(message));
+        createAnswer();
+      } else if (message.type == "answer") {
+        console.log('Socket answer: '+JSON.stringify(message));
+        pc.setRemoteDescription(new SessionDescription(message));
+      } else if (message.type == "candidate") {
+        console.log('Socket candidate: '+JSON.stringify(message));
+        var candidate = new IceCandidate({sdpMLineIndex: message.label, candidate: message.candidate});
+        pc.addIceCandidate(candidate);
+      }
+    }
+/*
+    var socket = io.connect('/vidiochat/index', {port: 8000});
+
+    socket.on('message', function (message){
+      if (message.type === 'offer') {
+        pc.setRemoteDescription(new SessionDescription(message));
+        createAnswer();
+      } 
+      else if (message.type === 'answer') {
+        pc.setRemoteDescription(new SessionDescription(message));
+      } 
+      else if (message.type === 'candidate') {
+        var candidate = new IceCandidate({sdpMLineIndex: message.label, candidate: message.candidate});
+        pc.addIceCandidate(candidate);
+      }
+    });
+*/
+
+    $('#play').click(function() {
+      openStream()
+    });
+    
+    $('#stop').click(function() {
+      if (selfStream) {
+        selfStream.stop();
+      }
+    });
+
+    $('#call').click(function(){
+      createOffer();
+    });
+
+    $('#local-container').draggable();
+    $('#remote-container').draggable();  
+  });
+  
+</script>
+
+<div id="local-container" class="local-container ui-widget-content">
+  <div class="local-stream-wrapper">
+  <video id="local-stream" class="local-stream" autoplay></video>
+  </div>
+  <div class="control-panel">
+    <ul class="fa fa-play btn btn-success" id="play"></ul>
+    <ul class="fa fa-stop btn btn-danger" id="stop"></ul>
+    <ul class="fa fa-phone btn btn-warning" id="call"></ul>
+  </div>
+</div>
+
+<div id="remote-container" class="remote-container ui-widget-content">
+  <div class="remote-stream-wrapper">
+  <video id="remote-stream" class="remote-stream" autoplay></video>
+  </div>  
+</div>
+{{template "footer.html" .}}

@@ -38,6 +38,30 @@
 	word-wrap: break-word;
 }
 
-.pupupu {
-	
+.local-container {
+	z-index:1000;
+	padding: 5px;
+	background-color: #f0f0f0;
+	position: absolute;
+	.local-stream {
+		width: 200px;
+		border: 2px solid #e0e0e0;
+	}
+	.control-panel {
+		display: inline;
+	}
 }
+
+.remote-container {
+	z-index:100;
+	padding: 5px;
+	background-color: #f0f0f0;
+	position: absolute;
+	left:300px;
+	.remote-stream {
+		width: 400px;
+		border: 2px solid #e0e0e0;
+	}
+}
+
+
