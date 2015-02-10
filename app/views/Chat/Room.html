@@ -2,11 +2,11 @@
 {{template "header.html" .}}
 
 <div class="chat">
-<div class="dialog col-sm-offset-2 col-sm-8">
+<div id="dialog" class="dialog col-sm-offset-2 col-sm-8 col-xs-offset-2 col-xs-8">
   <dl id="thread" class="dl-horizontal"></dl>
 </div>
 <div class="message-box">
-  <div class="col-md-8 col-md-offset-2">
+  <div class="col-md-8 col-md-offset-2 col-xs-offset-2 col-xs-8">
     <textarea id="message" class="form-control" autofocus></textarea>
     <input type="submit" class="btn btn-primary btn-sm btn-block" value="send" id="send">
   </div>
@@ -15,27 +15,70 @@
 </div>
 
 <script type="text/javascript">
-  // Create a socket
-  var socket = new WebSocket('ws://'+window.location.host+'/Chat/RoomSocket')
-  // Display a message
-  var display = function(event) {
-    var height=$("#thread").height(); 
-    $('#thread').append("<dt>"+event.User+"</dt><dd>"+event.Text.split('\n').join('<br/>')+"</dd>");
-    $('html, body').animate({scrollTop:height}, 'fast');
-  }
-  // Message received on the socket
-  socket.onmessage = function(event) {
-    display(JSON.parse(event.data))
-  }
-  $('#send').click(function(e) {
-    var message = $('#message').val()
-    $('#message').val('')
-    socket.send(message)
-  });
-  $('#message').keypress(function(e) {
-    if((e.keyCode == 10 || e.keyCode == 13) && e.ctrlKey) {
-      $('#send').click()
-      e.preventDefault()
+  $(document).ready(function() {
+    // Create a socket
+    var socket = new WebSocket('ws://'+window.location.host+'/Chat/RoomSocket')
+    // Display a message
+    var display = function(event) {
+      var height=$("#thread").height(); 
+      $('#thread').append("<dt>"+event.User+"</dt><dd>"+event.Text.split('\n').join('<br/>')+"</dd>");
+      $('html, body').animate({scrollTop:height}, 'fast');
     }
-  })
+    // Message received on the socket
+    socket.onmessage = function(event) {
+      display(JSON.parse(event.data))
+    }
+    $('#send').click(function(e) {
+      var message = $('#message').val()
+      $('#message').val('')
+      socket.send(message)
+    });
+    $('#message').keypress(function(e) {
+      if((e.keyCode == 10 || e.keyCode == 13) && e.ctrlKey) {
+        $('#send').click()
+        e.preventDefault()
+      }
+    })
+    $('#dialog').on('dragover', function(event) {
+      event.preventDefault();  
+      event.stopPropagation();
+      $('#dialog').addClass('over');
+    });
+    $('#dialog').on('dragleave', function(event) {
+      event.preventDefault();  
+      event.stopPropagation();
+      $('#dialog').removeClass('over');
+    });
+    $('#dialog')[0].ondrop = function(event) {
+      event.preventDefault();
+      $('#dialog').removeClass('over');
+
+      var files = event.dataTransfer.files;
+      
+      for (i=0;i<files.length;i++) {
+        var file = files[i];
+
+        if (file.size > 10000000) {
+          $(this).text('File is too large');
+          $(this).addClass('bg-danger');
+          continue;
+        }
+
+        if (!file.type.match('image.*')) {
+          continue;
+        }
+
+        var reader = new FileReader();
+
+        reader.onload = (function(f) {
+          return function(e) {
+            $('#thread').append(['<dt>','{{.loggedInUser.FirstName}} {{.loggedInUser.LastName}}','</dt><dd><img src="',e.target.result, '" class="img-msg" title="', escape(f.name), '"/></dd>'].join(''));
+          }
+        })(file);
+
+        reader.readAsDataURL(file);
+      }
+    };
+  });
+  
 </script>
