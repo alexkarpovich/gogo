@@ -3,7 +3,7 @@
 node_modules
 public/styles/css*
 public/js/dist*
-public/fonts/*
+public/styles/fonts/*
 public/bower_components*
 app/tmp*
 app/routes*
