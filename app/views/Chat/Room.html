@@ -22,7 +22,7 @@
     var display = function(event) {
       var height=$("#thread").height(); 
       $('#thread').append("<dt>"+event.User+"</dt><dd>"+event.Text.split('\n').join('<br/>')+"</dd>");
-      $('html, body').animate({scrollTop:height}, 'fast');
+      $('#dialog').animate({scrollTop:height});
     }
     // Message received on the socket
     socket.onmessage = function(event) {
@@ -72,7 +72,9 @@
 
         reader.onload = (function(f) {
           return function(e) {
-            $('#thread').append(['<dt>','{{.loggedInUser.FirstName}} {{.loggedInUser.LastName}}','</dt><dd><img src="',e.target.result, '" class="img-msg" title="', escape(f.name), '"/></dd>'].join(''));
+            $('#thread').append(['<dt>','{{.loggedInUser.FirstName}} {{.loggedInUser.LastName}}','</dt><dd><img src="',e.target.result, '" class="img-msg" title="', escape(f.name), '"/>.</dd>'].join(''));
+            var height=$("#thread").height();
+          $('#dialog').animate({scrollTop:height});
           }
         })(file);
 

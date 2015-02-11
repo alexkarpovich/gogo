@@ -23,12 +23,12 @@ var paths = {
 var jsLibs = require('./jslibs');
 
 gulp.task('clean', function(done) {
-    del(['./public/styles/css/*', './public/js/dist/*', './public/fonts/*'], {force: true}, done);
+    del(['./public/styles/css/*', './public/js/dist/*', './public/styles/fonts/*'], {force: true}, done);
 });
 
 gulp.task('copy:fonts', function() {
     return gulp.src(paths.fonts)
-        .pipe(gulp.dest('./public/fonts'));
+        .pipe(gulp.dest('./public/styles/fonts'));
 });
 
 gulp.task('concat:devLibs', function() {
