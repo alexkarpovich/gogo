@@ -4,6 +4,7 @@ node_modules
 public/styles/css*
 public/js/dist*
 public/styles/fonts/*
+public/img/*
 public/bower_components*
 app/tmp*
 app/routes*

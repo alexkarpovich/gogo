@@ -22,7 +22,7 @@
     var display = function(event) {
       var height=$("#thread").height(); 
       $('#thread').append("<dt>"+event.User+"</dt><dd>"+event.Text.split('\n').join('<br/>')+"</dd>");
-      $('#dialog').animate({scrollTop:height});
+      $('#dialog').animate({scrollTop:2*height});
     }
     // Message received on the socket
     socket.onmessage = function(event) {
@@ -50,36 +50,39 @@
       $('#dialog').removeClass('over');
     });
     $('#dialog')[0].ondrop = function(event) {
+      event.stopPropagation();
       event.preventDefault();
       $('#dialog').removeClass('over');
 
       var files = event.dataTransfer.files;
       
-      for (i=0;i<files.length;i++) {
-        var file = files[i];
+      var formData = new FormData();
+      $.each(files, function(key, value) {
+        formData.append(key, value);
+      });
 
-        if (file.size > 10000000) {
-          $(this).text('File is too large');
-          $(this).addClass('bg-danger');
-          continue;
-        }
-
-        if (!file.type.match('image.*')) {
-          continue;
-        }
-
-        var reader = new FileReader();
-
-        reader.onload = (function(f) {
-          return function(e) {
-            $('#thread').append(['<dt>','{{.loggedInUser.FirstName}} {{.loggedInUser.LastName}}','</dt><dd><img src="',e.target.result, '" class="img-msg" title="', escape(f.name), '"/>.</dd>'].join(''));
-            var height=$("#thread").height();
-          $('#dialog').animate({scrollTop:height});
+      $.ajax({
+        url: '/Chat/RoomSocket',
+        type: 'POST',
+        data: formData,
+        cache: false,
+        dataType: 'json',
+        processData: false,
+        contentType: false,
+        success: function (data, textStatus, jsXHR) {
+          if (typeof data.error === 'undefined') {
+            var images = data.images;
+            for(var i=0;i<images.length;i++) {
+              socket.send(['<img src="/',images[i], '" class="img-msg"/>'].join(''));
+            }
+          } else {
+            console.log('ERROR: '+data.error);
           }
-        })(file);
-
-        reader.readAsDataURL(file);
-      }
+        },
+        error: function(jqXHR, textStatus, errorThrown) {
+          console.log('ERRORS: '+textStatus);
+        }
+      });      
     };
   });
   
