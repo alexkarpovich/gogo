@@ -25,6 +25,7 @@ RUN go get gopkg.in/mgo.v2
 RUN go get gopkg.in/mgo.v2/bson
 RUN go get gopkg.in/pipe.v2
 RUN go get code.google.com/p/go.net/websocket
+RUN go get github.com/disintegration/imaging
 
 WORKDIR /goprojects/src/gogo
 

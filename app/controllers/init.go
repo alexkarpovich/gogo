@@ -2,11 +2,19 @@ package controllers
 
 import (
 	"crypto/md5"
+	"github.com/disintegration/imaging"
 	"github.com/revel/revel"
 	"gogo/app/models"
 	"gopkg.in/mgo.v2"
 	"gopkg.in/mgo.v2/bson"
+	"path"
+	"runtime"
 	"time"
+)
+
+const (
+	MAX_WIDTH  = 200
+	MAX_HEIGHT = 200
 )
 
 func init() {
@@ -25,6 +33,23 @@ func Connect() *mgo.Session {
 	}
 
 	return connection
+}
+
+func ResizeImage(imageName string) string {
+	runtime.GOMAXPROCS(runtime.NumCPU())
+	file, err := imaging.Open(imageName)
+	if err != nil {
+		panic(err)
+	}
+
+	thumb := imaging.Thumbnail(file, 200, 200, imaging.CatmullRom)
+	fname := path.Base(imageName)
+	err = imaging.Save(thumb, "public/img/uploaded/200x200/"+fname)
+	if err != nil {
+		panic(err)
+	}
+
+	return fname
 }
 
 func Migrate() {

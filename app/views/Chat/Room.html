@@ -73,7 +73,7 @@
           if (typeof data.error === 'undefined') {
             var images = data.images;
             for(var i=0;i<images.length;i++) {
-              socket.send(['<img src="/',images[i], '" class="img-msg"/>'].join(''));
+              socket.send(['<img src="/public/img/uploaded/200x200/',images[i], '" class="img-msg"/>'].join(''));
             }
           } else {
             console.log('ERROR: '+data.error);

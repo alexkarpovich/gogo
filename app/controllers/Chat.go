@@ -5,8 +5,8 @@ import (
 	"github.com/revel/revel"
 	"gogo/app/chat"
 	"gogo/app/models"
-	"os"
 	"io"
+	"os"
 )
 
 type Chat struct {
@@ -20,9 +20,9 @@ func (this Chat) Room() revel.Result {
 func (this Chat) RoomSocket(ws *websocket.Conn) revel.Result {
 	if this.Request.Method == "POST" {
 		result := make(map[string][]string)
-		fileList := make([]string,0)
+		fileList := make([]string, 0)
 		m := this.Request.MultipartForm
-	    for fname, _ := range m.File {
+		for fname, _ := range m.File {
 			fheaders := m.File[fname]
 			for i, _ := range fheaders {
 				//for each fileheader, get a handle to the actual file
@@ -32,9 +32,9 @@ func (this Chat) RoomSocket(ws *websocket.Conn) revel.Result {
 					panic(err)
 				}
 				//create destination file making sure the path is writeable.
-				dst_path := "public/img/uploaded/"+fheaders[i].Filename
+				dst_path := "public/img/uploaded/" + fheaders[i].Filename
 				dst, err := os.Create(dst_path)
-				defer dst.Close() //close the destination file handle on function return
+				defer dst.Close()                             //close the destination file handle on function return
 				defer os.Chmod(dst_path, (os.FileMode)(0644)) //limit access restrictions
 				if err != nil {
 					panic(err)
@@ -43,10 +43,11 @@ func (this Chat) RoomSocket(ws *websocket.Conn) revel.Result {
 				if _, err := io.Copy(dst, file); err != nil {
 					panic(err)
 				}
-				fileList = append(fileList, dst_path)
+				fname := ResizeImage(dst_path)
+				fileList = append(fileList, fname)
 			}
 			revel.TRACE.Printf("Upload successful..")
-		}	
+		}
 		result["images"] = fileList
 		return this.RenderJson(result)
 	} else {
@@ -92,6 +93,6 @@ func (this Chat) RoomSocket(ws *websocket.Conn) revel.Result {
 				chat.Say(user.FirstName+" "+user.LastName, msg)
 			}
 		}
-	}	
+	}
 	return nil
 }
