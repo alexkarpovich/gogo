@@ -11,6 +11,7 @@ ENV MONGOHQ_URL 'mongodb://172.17.0.36:27017'
 # go 1.4.1 tarball
 RUN wget -qO- https://storage.googleapis.com/golang/go1.4.1.linux-amd64.tar.gz | tar -C /usr/local -xzf -
 
+
 # GOPATH
 RUN mkdir -p /goprojects
 RUN mkdir -p /goprojects/bin
@@ -26,6 +27,8 @@ RUN go get gopkg.in/mgo.v2/bson
 RUN go get gopkg.in/pipe.v2
 RUN go get code.google.com/p/go.net/websocket
 RUN go get github.com/disintegration/imaging
+
+RUN chmod 775 -R /goprojects
 
 WORKDIR /goprojects/src/gogo
 

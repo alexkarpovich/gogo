@@ -15,7 +15,10 @@
 </div>
 
 <script type="text/javascript">
-  $(document).ready(function() {
+  function showBiggerImageSize(el) {
+      alertify.alert('<img src="'+el.src.replace('200x200/','')+'" width="400">');
+  }
+  $(document).ready(function() {    
     // Create a socket
     var socket = new WebSocket('ws://'+window.location.host+'/Chat/RoomSocket')
     // Display a message
@@ -39,6 +42,7 @@
         e.preventDefault()
       }
     })
+
     $('#dialog').on('dragover', function(event) {
       event.preventDefault();  
       event.stopPropagation();
@@ -73,7 +77,7 @@
           if (typeof data.error === 'undefined') {
             var images = data.images;
             for(var i=0;i<images.length;i++) {
-              socket.send(['<img src="/public/img/uploaded/200x200/',images[i], '" class="img-msg"/>'].join(''));
+              socket.send(['<img src="/public/img/uploaded/200x200/',images[i], '" onClick="showBiggerImageSize(this)" class="img-msg"/>'].join(''));
             }
           } else {
             console.log('ERROR: '+data.error);
@@ -83,7 +87,7 @@
           console.log('ERRORS: '+textStatus);
         }
       });      
-    };
+    };    
   });
   
 </script>
